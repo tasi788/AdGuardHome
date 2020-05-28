@@ -11,6 +11,7 @@ import axios from 'axios';
 import i18n from 'i18next';
 import uniqBy from 'lodash/uniqBy';
 import versionCompare from './versionCompare';
+import { getTrackerData } from './trackers/trackers';
 
 import {
     STANDARD_DNS_PORT,
@@ -24,15 +25,16 @@ import {
     DEFAULT_LANGUAGE,
     FILTERED_STATUS,
     FILTERED,
+    SCHEME_TO_PROTOCOL_MAP,
 } from './constants';
 
 /**
  * @param string The time to format
  * @returns string Returns the time in the format HH:mm:ss
  */
-export const formatTime = (time) => {
+export const formatTime = (time, options = DEFAULT_TIME_FORMAT) => {
     const parsedTime = dateParse(time);
-    return dateFormat(parsedTime, DEFAULT_TIME_FORMAT);
+    return dateFormat(parsedTime, options);
 };
 
 /**
@@ -58,15 +60,17 @@ export const isToday = (date) => isSameDay(new Date(date), new Date());
 
 export const normalizeLogs = (logs) => logs.map((log) => {
     const {
-        time,
-        question,
         answer: response,
-        reason,
+        answer_dnssec,
         client,
+        elapsedMs,
+        question,
+        reason,
+        status,
+        time,
         filterId,
         rule,
         service_name,
-        status,
         original_answer,
     } = log;
     const { host: domain, type } = question;
@@ -74,6 +78,7 @@ export const normalizeLogs = (logs) => logs.map((log) => {
         const { value, type, ttl } = response;
         return `${type}: ${value} (ttl=${ttl})`;
     }) : [];
+    const tracker = getTrackerData(domain);
     return {
         time,
         domain,
@@ -86,6 +91,9 @@ export const normalizeLogs = (logs) => logs.map((log) => {
         status,
         serviceName: service_name,
         originalAnswer: original_answer,
+        tracker,
+        answer_dnssec,
+        elapsedMs,
     };
 });
 
@@ -187,9 +195,10 @@ export const getInterfaceIp = (option) => {
 export const getIpList = (interfaces) => {
     let list = [];
 
-    Object.keys(interfaces).forEach((item) => {
-        list = [...list, ...interfaces[item].ip_addresses];
-    });
+    Object.keys(interfaces)
+        .forEach((item) => {
+            list = [...list, ...interfaces[item].ip_addresses];
+        });
 
     return list.sort();
 };
@@ -444,6 +453,14 @@ export const checkSafeBrowsing = (reason) => reason === FILTERED_STATUS.FILTERED
 export const checkParental = (reason) => reason === FILTERED_STATUS.FILTERED_PARENTAL;
 export const checkBlockedService = (reason) => reason === FILTERED_STATUS.FILTERED_BLOCKED_SERVICE;
 
+export const REQ_STATUS_TO_LABEL_MAP = {
+    [FILTERED_STATUS.NOT_FILTERED_WHITE_LIST]: 'show_whitelisted_responses',
+    [FILTERED_STATUS.NOT_FILTERED_NOT_FOUND]: 'show_processed_responses',
+    [FILTERED_STATUS.FILTERED_BLOCKED_SERVICE]: 'show_blocked_responses',
+    [FILTERED_STATUS.FILTERED_SAFE_SEARCH]: 'safe_search',
+    [FILTERED_STATUS.FILTERED_BLACK_LIST]: 'blocklist',
+};
+
 export const getCurrentFilter = (url, filters) => {
     const filter = filters && filters.find((item) => url === item.url);
 
@@ -462,4 +479,36 @@ export const getCurrentFilter = (url, filters) => {
 export const formatNumber = (num) => {
     const currentLanguage = i18n.languages[0] || DEFAULT_LANGUAGE;
     return num.toLocaleString(currentLanguage);
+};
+
+
+/**
+ * @param {string} elapsedMs
+ * @param {function} t translate
+ * @returns {string}
+ */
+export const formatElapsedMs = (elapsedMs, t) => {
+    const formattedElapsedMs = parseInt(elapsedMs, 10) || parseFloat(elapsedMs).toFixed(2);
+    return `${formattedElapsedMs} ${t('milliseconds_abbreviation')}`;
+};
+
+/**
+ *
+ * @param {string} upstream
+ * @returns {string}
+ */
+export const getProtocolName = (upstream) => {
+    if (!upstream) {
+        return '';
+    }
+    if (upstream.startsWith('https')) {
+        return SCHEME_TO_PROTOCOL_MAP.HTTPS;
+    }
+    if (upstream.startsWith('tcp')) {
+        return SCHEME_TO_PROTOCOL_MAP.TCP;
+    }
+    if (upstream.startsWith('tls')) {
+        return SCHEME_TO_PROTOCOL_MAP.TLS;
+    }
+    return SCHEME_TO_PROTOCOL_MAP.PLAIN;
 };

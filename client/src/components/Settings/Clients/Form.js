@@ -90,7 +90,7 @@ const renderFieldsWrapper = (placeholder, buttonTitle) => function cell(row) {
                 onClick={() => fields.push()}
                 title={buttonTitle}
             >
-                <svg className="icon icon--close">
+                <svg className="icon icon--small">
                     <use xlinkHref="#plus" />
                 </svg>
             </button>

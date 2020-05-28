@@ -27,9 +27,16 @@ const queryLogs = handleActions(
 
         [actions.setLogsFilterRequest]: (state) => ({ ...state, processingGetLogs: true }),
         [actions.setLogsFilterFailure]: (state) => ({ ...state, processingGetLogs: false }),
+        [actions.toggleDetailedLogs]: (state, { payload }) => ({
+            ...state,
+            isDetailed: payload,
+        }),
+
+        [actions.setLogsFilterRequest]: (state) => ({ ...state, processingGetLogs: true }),
+        [actions.setLogsFilterFailure]: (state) => ({ ...state, processingGetLogs: false }),
         [actions.setLogsFilterSuccess]: (state, { payload }) => {
             const { logs, oldest, filter } = payload;
-            const pageSize = 100;
+            const pageSize = 10;
             const page = 0;
 
             const pages = Math.ceil(logs.length / pageSize);
@@ -66,7 +73,7 @@ const queryLogs = handleActions(
                 allLogs = [...state.allLogs, ...logs];
             }
 
-            const pages = Math.ceil(logsWithOffset.length / pageSize);
+            const pages = Math.floor(logsWithOffset.length / pageSize);
             const total = logsWithOffset.length;
             const rowsStart = pageSize * page;
             const rowsEnd = (pageSize * page) + pageSize;
@@ -135,6 +142,7 @@ const queryLogs = handleActions(
         filter: DEFAULT_LOGS_FILTER,
         isFiltered: false,
         anonymize_client_ip: false,
+        isDetailed: true,
     },
 );
 

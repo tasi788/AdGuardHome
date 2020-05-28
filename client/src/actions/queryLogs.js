@@ -2,7 +2,7 @@ import { createAction } from 'redux-actions';
 
 import apiClient from '../api/Api';
 import { normalizeLogs, getParamsForClientsSearch, addClientInfo } from '../helpers/helpers';
-import { TABLE_DEFAULT_PAGE_SIZE } from '../helpers/constants';
+import { TABLE_DEFAULT_PAGE_SIZE, TABLE_FIRST_PAGE } from '../helpers/constants';
 import { addErrorToast, addSuccessToast } from './toasts';
 
 const getLogsWithParams = async (config) => {
@@ -56,6 +56,7 @@ const checkFilteredLogs = async (data, filter, dispatch, total) => {
 
 export const setLogsPagination = createAction('LOGS_PAGINATION');
 export const setLogsPage = createAction('SET_LOG_PAGE');
+export const toggleDetailedLogs = createAction('TOGGLE_DETAILED_LOGS');
 
 export const getLogsRequest = createAction('GET_LOGS_REQUEST');
 export const getLogsFailure = createAction('GET_LOGS_FAILURE');
@@ -93,7 +94,7 @@ export const setLogsFilter = (filter) => async (dispatch) => {
         const updatedData = additionalData.logs ? { ...data, ...additionalData } : data;
 
         dispatch(setLogsFilterSuccess({ ...updatedData, filter }));
-        dispatch(setLogsPage(0));
+        dispatch(setLogsPage(TABLE_FIRST_PAGE));
     } catch (error) {
         dispatch(addErrorToast({ error }));
         dispatch(setLogsFilterFailure(error));

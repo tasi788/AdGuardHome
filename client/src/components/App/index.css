@@ -1,4 +1,9 @@
 :root {
+    --yellow-pale: rgba(247, 181, 0, 0.1);
+    --green79: #67B279;
+    --gray-a5: #a5a5a5;
+    --gray-d8: #d8d8d8;
+    --gray-f3: #F3F3F3;
     --font-family-monospace: Monaco, Menlo, "Ubuntu Mono", Consolas, source-code-pro, monospace;
 }
 
@@ -22,6 +27,16 @@ body {
     }
 }
 
+@media screen and (max-width: 992px) {
+    .container {
+        padding: 0 !important;
+    }
+
+    .container--wrap {
+        min-height: calc(100vh);
+    }
+}
+
 .loading-bar {
     position: fixed;
     top: 0;
@@ -31,9 +46,62 @@ body {
     background: linear-gradient(45deg, rgba(99, 125, 120, 1) 0%, rgba(88, 177, 101, 1) 100%);
 }
 
-.hidden {
-    display: none;
+@media (max-width: 575px) {
+    .container {
+        padding-right: 0;
+        padding-left: 0;
+    }
 }
+
+.form-control--search {
+    width: 39.125rem;
+    box-shadow: 0 1px 0 #ddd;
+    padding: 0 2.5rem;
+    height: 2.25rem;
+}
+
+@media (max-width: 1279px) {
+    .form-control--search {
+        max-width: 30.125rem;
+    }
+}
+
+@media (max-width: 991px) {
+    .form-control--search {
+        max-width: 17rem;
+    }
+}
+
+@media (max-width: 469px) {
+    .form-control--search {
+        max-width: 85%;
+    }
+}
+
+.form-control--transparent {
+    border: 0 solid transparent !important;
+    background-color: transparent !important;
+}
+
+.input-group-search {
+    background-color: transparent;
+    position: relative;
+    left: 2rem;
+    top: 0.4rem;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.ml-small {
+    margin-left: 3.3125rem;
+}
+
+@media (max-width: 767px) {
+    .ml-small {
+        margin-left: 1.5rem;
+    }
+}
+
 
 .font-monospace {
     font-family: var(--font-family-monospace);

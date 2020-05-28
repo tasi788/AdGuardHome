@@ -30,14 +30,14 @@ const countCell = (dnsQueries) => function cell(row) {
 const renderBlockingButton = (blocked, ip, handleClick, processing) => {
     let buttonProps = {
         className: 'btn-outline-danger',
-        text: 'block_btn',
+        text: 'block',
         type: 'block',
     };
 
     if (blocked) {
         buttonProps = {
             className: 'btn-outline-secondary',
-            text: 'unblock_btn',
+            text: 'unblock',
             type: 'unblock',
         };
     }
@@ -64,7 +64,7 @@ const clientCell = (t, toggleClientStatus, processing, disallowedClients) => fun
 
     return (
             <Fragment>
-                <div className="logs__row logs__row--overflow logs__row--column">
+                <div className="logs__row o-hidden logs__row--column">
                     {formatClientCell(row, t)}
                 </div>
                 {renderBlockingButton(blocked, value, toggleClientStatus, processing)}

@@ -5,24 +5,26 @@ import { WHOIS_ICONS } from './constants';
 const getFormattedWhois = (whois, t) => {
     const whoisInfo = normalizeWhois(whois);
     return (
-        Object.keys(whoisInfo).map((key) => {
-            const icon = WHOIS_ICONS[key];
-            return (
-                <span className="logs__whois text-muted" key={key} title={t(key)}>
+        Object.keys(whoisInfo)
+            .map((key) => {
+                const icon = WHOIS_ICONS[key];
+                return (
+                    <span className="logs__whois text-muted" key={key} title={t(key)}>
                     {icon && (
                         <Fragment>
                             <svg className="logs__whois-icon icons">
                                 <use xlinkHref={`#${icon}`} />
-                            </svg>&nbsp;
+                            </svg>
+                            &nbsp;
                         </Fragment>
                     )}{whoisInfo[key]}
                 </span>
-            );
-        })
+                );
+            })
     );
 };
 
-export const formatClientCell = (row, t) => {
+export const formatClientCell = (row, t, isDetailed = false) => {
     const { value, original: { info } } = row;
     let whoisContainer = '';
     let nameContainer = value;
@@ -31,11 +33,10 @@ export const formatClientCell = (row, t) => {
         const { name, whois_info } = info;
 
         if (name) {
-            nameContainer = (
-                <span className="logs__text logs__text--wrap" title={`${name} (${value})`}>
-                    {name} <small>({value})</small>
-                </span>
-            );
+            nameContainer = isDetailed ? <small>{value}</small>
+                : <div className="logs__text logs__text--wrap" title={`${name} (${value})`}>
+                    {name} <small>{`(${value})`}</small>
+                </div>;
         }
 
         if (whois_info) {
@@ -48,11 +49,11 @@ export const formatClientCell = (row, t) => {
     }
 
     return (
-        <span className="logs__text">
+        <div className="logs__text">
             <Fragment>
                 {nameContainer}
                 {whoisContainer}
             </Fragment>
-        </span>
+        </div>
     );
 };

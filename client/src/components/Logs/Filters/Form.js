@@ -4,7 +4,6 @@ import { Field, reduxForm } from 'redux-form';
 import { withTranslation } from 'react-i18next';
 import flow from 'lodash/flow';
 
-import { renderInputField } from '../../../helpers/form';
 import { RESPONSE_FILTER } from '../../../helpers/constants';
 import Tooltip from '../../ui/Tooltip';
 
@@ -19,23 +18,26 @@ const renderFilterField = ({
     tooltip,
     meta: { touched, error },
 }) => <Fragment>
-    <div className="logs__input-wrap">
-        <input
-            {...input}
-            id={id}
-            placeholder={placeholder}
-            type={type}
-            className={className}
-            disabled={disabled}
-            autoComplete={autoComplete}
-        />
-        <span className="logs__notice">
+    <div className="input-group-search">
+        <svg className="icons icon--small icon--gray">
+            <use xlinkHref="#magnifier" />
+        </svg>
+    </div>
+    <input
+        {...input}
+        id={id}
+        placeholder={placeholder}
+        type={type}
+        className={className}
+        disabled={disabled}
+        autoComplete={autoComplete}
+        aria-label={placeholder} />
+    <span className="logs__notice">
                 <Tooltip text={tooltip} type='tooltip-custom--logs' />
             </span>
-        {!disabled
-        && touched
-        && (error && <span className="form__message form__message--error">{error}</span>)}
-    </div>
+    {!disabled
+    && touched
+    && (error && <span className="form__message form__message--error">{error}</span>)}
 </Fragment>;
 
 renderFilterField.propTypes = {
@@ -57,60 +59,44 @@ const Form = (props) => {
     const {
         t,
         handleChange,
+        className = '',
+        responseStatusClass,
     } = props;
 
     return (
-        <form onSubmit={handleChange}>
-            <div className="row">
-                <div className="col-6 col-sm-3 my-2">
-                    <Field
-                        id="filter_domain"
-                        name="filter_domain"
-                        component={renderFilterField}
-                        type="text"
-                        className="form-control"
-                        placeholder={t('domain_name_table_header')}
-                        tooltip={t('query_log_strict_search')}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="col-6 col-sm-3 my-2">
-                    <Field
-                        id="filter_question_type"
-                        name="filter_question_type"
-                        component={renderInputField}
-                        type="text"
-                        className="form-control"
-                        placeholder={t('type_table_header')}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="col-6 col-sm-3 my-2">
-                    <Field
-                        name="filter_response_status"
-                        component="select"
-                        className="form-control custom-select"
-                    >
-                        <option value={RESPONSE_FILTER.ALL}>
-                            {t('show_all_filter_type')}
-                        </option>
-                        <option value={RESPONSE_FILTER.FILTERED}>
-                            {t('show_filtered_type')}
-                        </option>
-                    </Field>
-                </div>
-                <div className="col-6 col-sm-3 my-2">
-                    <Field
-                        id="filter_client"
-                        name="filter_client"
-                        component={renderFilterField}
-                        type="text"
-                        className="form-control"
-                        placeholder={t('client_table_header')}
-                        tooltip={t('query_log_strict_search')}
-                        onChange={handleChange}
-                    />
-                </div>
+        <form className="mw-100 d-flex flex-wrap"
+              onSubmit={(e) => {
+                  e.preventDefault();
+              }}>
+            <Field
+                id="search"
+                name="search"
+                component={renderFilterField}
+                type="text"
+                className={`form-control--search form-control--transparent ${className}`}
+                placeholder={t('domain_or_client')}
+                tooltip={t('query_log_strict_search')}
+                onChange={handleChange}
+            />
+            <div className="field__select">
+                <Field
+                    name="response_status"
+                    component="select"
+                    className={`form-control custom-select custom-select__arrow--left ml-small form-control--transparent ${responseStatusClass}`}
+                >
+                    <option value="">
+                        {t('show_all_responses')}
+                    </option>
+                    <option value={RESPONSE_FILTER.BLOCKED}>
+                        {t('show_blocked_responses')}
+                    </option>
+                    <option value={RESPONSE_FILTER.PROCESSED}>
+                        {t('show_processed_responses')}
+                    </option>
+                    <option value={RESPONSE_FILTER.WHITELISTED}>
+                        {t('show_whitelisted_responses')}
+                    </option>
+                </Field>
             </div>
         </form>
     );
@@ -118,6 +104,8 @@ const Form = (props) => {
 
 Form.propTypes = {
     handleChange: PropTypes.func,
+    className: PropTypes.string,
+    responseStatusClass: PropTypes.string,
     t: PropTypes.func.isRequired,
 };
 

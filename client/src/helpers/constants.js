@@ -53,9 +53,11 @@ export const STANDARD_HTTPS_PORT = 443;
 export const EMPTY_DATE = '0001-01-01T00:00:00Z';
 
 export const DEBOUNCE_TIMEOUT = 300;
-export const DEBOUNCE_FILTER_TIMEOUT = 500;
+export const DEBOUNCE_FILTER_TIMEOUT = 200;
+export const TRANSITION_TIMEOUT = 250;
 export const CHECK_TIMEOUT = 1000;
-export const STOP_TIMEOUT = 10000;
+export const SUCCESS_TOAST_TIMEOUT = 5000;
+export const FAILURE_TOAST_TIMEOUT = 30000;
 
 export const UNSAFE_PORTS = [
     1,
@@ -335,24 +337,35 @@ export const DNS_RECORD_TYPES = [
 ];
 
 export const DEFAULT_LOGS_FILTER = {
-    filter_domain: '',
-    filter_client: '',
-    filter_question_type: '',
-    filter_response_status: '',
+    search: '',
+    response_status: '',
 };
 
 export const DEFAULT_LANGUAGE = 'en';
 
-export const TABLE_DEFAULT_PAGE_SIZE = 100;
+export const TABLE_DEFAULT_PAGE_SIZE = 10;
 
-export const SMALL_TABLE_DEFAULT_PAGE_SIZE = 20;
+export const TABLE_FIRST_PAGE = 0;
+
+export const LEASES_TABLE_DEFAULT_PAGE_SIZE = 20;
 
 export const RESPONSE_FILTER = {
     ALL: 'all',
-    FILTERED: 'filtered',
+    BLOCKED: 'blocked',
+    WHITELISTED: 'whitelisted',
+    PROCESSED: 'processed',
 };
 
 export const DEFAULT_TIME_FORMAT = 'HH:mm:ss';
+
+export const LONG_TIME_FORMAT = 'HH:mm:ss.SSS';
+
+export const DEFAULT_SHORT_DATE_FORMAT_OPTIONS = {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour12: false,
+};
 
 export const DEFAULT_DATE_FORMAT_OPTIONS = {
     year: 'numeric',
@@ -370,9 +383,29 @@ export const DETAILED_DATE_FORMAT_OPTIONS = {
 
 export const CUSTOM_FILTERING_RULES_ID = 0;
 
-export const ACTION = {
+export const BLOCK_ACTIONS = {
     block: 'block',
     unblock: 'unblock',
+};
+
+export const RECORD_TO_IP_MAP = {
+    A: 'IPv4',
+    AAAA: 'IPv6',
+};
+
+export const SCHEME_TO_PROTOCOL_MAP = {
+    HTTPS: 'dns_over_https',
+    TCP: 'dns_over_tcp',
+    TLS: 'dns_over_tls',
+    PLAIN: 'plain',
+};
+
+export const REASON_TO_COLOR_CLASS_MAP = {
+    [FILTERED_STATUS.FILTERED_SAFE_SEARCH]: 'yellow',
+    [FILTERED_STATUS.FILTERED_BLACK_LIST]: 'red',
+    [FILTERED_STATUS.FILTERED_BLOCKED_SERVICE]: 'red',
+    [FILTERED_STATUS.NOT_FILTERED_WHITE_LIST]: 'green',
+    [FILTERED_STATUS.REWRITE]: 'blue',
 };
 
 export const DNS_REQUEST_OPTIONS = {
