@@ -8,8 +8,13 @@ import Logs from '../components/Logs';
 import { addSuccessToast } from '../actions/toasts';
 
 const mapStateToProps = (state) => {
-    const { queryLogs, dashboard, filtering } = state;
-    const props = { queryLogs, dashboard, filtering };
+    const {
+        queryLogs, dashboard, filtering, dnsConfig,
+    } = state;
+
+    const props = {
+        queryLogs, dashboard, filtering, dnsConfig,
+    };
     return props;
 };
 

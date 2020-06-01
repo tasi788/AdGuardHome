@@ -64,13 +64,23 @@ class Table extends Component {
         {
             Header: this.props.t('request_table_header'),
             accessor: 'domain',
-            Cell: (row) => getDomainCell(
-                row,
-                this.props.t,
-                this.props.isDetailed,
-                this.toggleBlocking,
-                this.props.autoClients,
-            ),
+            Cell: (row) => {
+                const {
+                    t,
+                    isDetailed,
+                    autoClients,
+                    dnssec_enabled,
+                } = this.props;
+
+                return getDomainCell({
+                    row,
+                    t,
+                    isDetailed,
+                    toggleBlocking: this.toggleBlocking,
+                    autoClients,
+                    dnssec_enabled,
+                });
+            },
             minWidth: 180,
             maxHeight: 60,
             headerClassName: 'logs__text',
@@ -84,7 +94,7 @@ class Table extends Component {
                 this.props.t,
                 this.props.isDetailed,
             ),
-            minWidth: 85,
+            minWidth: 100,
             maxHeight: 60,
             headerClassName: 'logs__text',
         },
@@ -122,7 +132,7 @@ class Table extends Component {
                 this.toggleBlocking,
                 this.props.autoClients,
             ),
-            minWidth: 140,
+            minWidth: 123,
             maxHeight: 60,
             headerClassName: 'logs__text',
         },
@@ -165,7 +175,6 @@ class Table extends Component {
             logs,
             pages,
             page,
-            defaultPageSize,
         } = this.props;
 
         const isLoading = processingGetLogs || processingGetConfig || this.props.loading;
@@ -187,7 +196,7 @@ class Table extends Component {
                 onFetchData={this.fetchData}
                 onPageChange={this.changePage}
                 className="logs__table"
-                defaultPageSize={defaultPageSize || TABLE_DEFAULT_PAGE_SIZE}
+                defaultPageSize={TABLE_DEFAULT_PAGE_SIZE}
                 loadingText={t('loading_table_status')}
                 rowsText={t('rows_table_footer_text')}
                 noDataText={!isLoading
@@ -243,6 +252,7 @@ Table.propTypes = {
     getFilteringStatus: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
     setLoading: PropTypes.func.isRequired,
+    dnssec_enabled: PropTypes.bool.isRequired,
 };
 
 export default withTranslation()(Table);

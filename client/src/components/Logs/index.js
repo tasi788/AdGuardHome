@@ -2,7 +2,11 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 
-import { TABLE_DEFAULT_PAGE_SIZE, TABLE_FIRST_PAGE, TRANSITION_TIMEOUT } from '../../helpers/constants';
+import {
+    TABLE_DEFAULT_PAGE_SIZE,
+    TABLE_FIRST_PAGE,
+    TRANSITION_TIMEOUT,
+} from '../../helpers/constants';
 
 import Loading from '../ui/Loading';
 import Filters from './Filters';
@@ -37,7 +41,10 @@ class Logs extends Component {
     getLogs = (older_than, page, initial) => {
         if (this.props.queryLogs.enabled) {
             this.props.getLogs({
-                older_than, page, pageSize: TABLE_DEFAULT_PAGE_SIZE, initial,
+                older_than,
+                page,
+                pageSize: TABLE_DEFAULT_PAGE_SIZE,
+                initial,
             });
         }
     };
@@ -57,6 +64,7 @@ class Logs extends Component {
             setLogsFilter,
             toggleDetailedLogs,
             dashboard,
+            dnsConfig,
             queryLogs: {
                 filter,
                 enabled,
@@ -102,6 +110,7 @@ class Logs extends Component {
                             setRules={this.props.setRules}
                             addSuccessToast={this.props.addSuccessToast}
                             getFilteringStatus={this.props.getFilteringStatus}
+                            dnssec_enabled={dnsConfig.dnssec_enabled}
                         />
                     </Fragment>
                 )}
@@ -128,6 +137,7 @@ Logs.propTypes = {
     setLogsPage: PropTypes.func.isRequired,
     toggleDetailedLogs: PropTypes.func.isRequired,
     t: PropTypes.func.isRequired,
+    dnsConfig: PropTypes.object.isRequired,
 };
 
 export default withTranslation()(Logs);

@@ -62,7 +62,7 @@ export const isToday = (date) => isSameDay(new Date(date), new Date());
 
 export const normalizeLogs = (logs) => logs.map((log) => {
     const {
-        answer: response,
+        answer,
         answer_dnssec,
         client,
         elapsedMs,
@@ -74,18 +74,23 @@ export const normalizeLogs = (logs) => logs.map((log) => {
         rule,
         service_name,
         original_answer,
+        upstream,
     } = log;
+
     const { host: domain, type } = question;
-    const responsesArray = response ? response.map((response) => {
+
+    const response = answer ? answer.map((response) => {
         const { value, type, ttl } = response;
         return `${type}: ${value} (ttl=${ttl})`;
     }) : [];
+
     const tracker = getTrackerData(domain);
+
     return {
         time,
         domain,
         type,
-        response: responsesArray,
+        response,
         reason,
         client,
         filterId,
@@ -96,6 +101,7 @@ export const normalizeLogs = (logs) => logs.map((log) => {
         tracker,
         answer_dnssec,
         elapsedMs,
+        upstream,
     };
 });
 

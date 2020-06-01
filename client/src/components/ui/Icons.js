@@ -245,11 +245,14 @@ const Icons = () => (
                 d="M41 4H9C6.243 4 4 6.243 4 9v32c0 2.757 2.243 5 5 5h32c2.757 0 5-2.243 5-5V9c0-2.757-2.243-5-5-5zm-3.994 18.323a7.482 7.482 0 0 1-.69.035 7.492 7.492 0 0 1-6.269-3.388v11.537a8.527 8.527 0 1 1-8.527-8.527c.178 0 .352.016.527.027v4.202c-.175-.021-.347-.053-.527-.053a4.351 4.351 0 1 0 0 8.704c2.404 0 4.527-1.894 4.527-4.298l.042-19.594h4.016a7.488 7.488 0 0 0 6.901 6.685v4.67z" />
         </symbol>
 
-        <symbol id="question" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-            <line x1="12" y1="17" x2="12" y2="17" />
+        <symbol id="question" width="20px" height="20px">
+            <g transform="translate(-982.000000, -454.000000) translate(416.000000, 440.000000) translate(564.000000, 12.000000)"
+               fill="none" fillRule="evenodd">
+                <circle stroke="currentColor" strokeWidth="1.5" cx="12" cy="12" r="9.25" />
+                <path
+                    d="M11.011 13.915c0-.627.076-1.126.227-1.498.15-.372.427-.738.829-1.1.401-.36.669-.653.802-.88.133-.226.2-.464.2-.715 0-.757-.346-1.136-1.039-1.136-.329 0-.592.102-.79.306-.197.204-.3.485-.309.843H9c.009-.856.283-1.525.822-2.01.54-.483 1.276-.725 2.208-.725.941 0 1.671.23 2.19.689.52.46.78 1.108.78 1.945 0 .381-.084.74-.253 1.079-.169.338-.464.714-.886 1.126l-.54.517a1.85 1.85 0 00-.578 1.15l-.027.41H11.01zm-.193 2.063c0-.3.101-.547.303-.742.202-.195.46-.292.776-.292.315 0 .574.097.776.292a.988.988 0 01.303.742.98.98 0 01-.297.733c-.197.193-.458.289-.782.289s-.585-.096-.783-.289a.98.98 0 01-.296-.733z"
+                    fill="currentColor" />
+            </g>
         </symbol>
 
         <symbol id="network" viewBox="0 0 50 50" fill="currentColor" strokeLinecap="round"
@@ -322,7 +325,8 @@ const Icons = () => (
                     <rect fill="#FFF" x="392" y="212" width="1136" height="800" rx="8" />
                     <g transform="translate(865 936)">
                         <rect stroke="#D8D8D8" width="32" height="32" rx="4" />
-                        <path d="M18 10l-6 6 6 6" stroke="#888" strokeLinecap="round" strokeWidth="1.5" />
+                        <path d="M18 10l-6 6 6 6" stroke="#888" strokeLinecap="round"
+                              strokeWidth="1.5" />
                     </g>
                 </g>
             </svg>
@@ -335,7 +339,8 @@ const Icons = () => (
                     <path fill="#F4F7FB" d="M0 0h1920v1170H0z" />
                     <rect fill="#FFF" x="392" y="212" width="1136" height="800" rx="8" />
                     <g transform="translate(1023 936)">
-                        <path d="M14 10l6 6-6 6" stroke="#888" strokeLinecap="round" strokeWidth="1.5" />
+                        <path d="M14 10l6 6-6 6" stroke="#888" strokeLinecap="round"
+                              strokeWidth="1.5" />
                         <rect stroke="#D8D8D8" width="32" height="32" rx="4" />
                     </g>
                 </g>

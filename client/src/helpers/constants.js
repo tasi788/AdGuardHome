@@ -350,10 +350,53 @@ export const TABLE_FIRST_PAGE = 0;
 export const LEASES_TABLE_DEFAULT_PAGE_SIZE = 20;
 
 export const RESPONSE_FILTER = {
-    ALL: 'all',
-    BLOCKED: 'blocked',
-    WHITELISTED: 'whitelisted',
-    PROCESSED: 'processed',
+    ALL: {
+        query: 'all',
+        label: 'show_all_responses',
+    },
+    FILTERED: {
+        query: 'filtered',
+        label: 'filtered',
+    },
+    PROCESSED: {
+        query: 'processed',
+        label: 'show_processed_responses',
+    },
+    // FIXME: visual space
+    BLOCKED: {
+        query: 'blocked',
+        label: 'show_blocked_responses',
+    },
+    WHITELISTED: {
+        query: 'whitelisted',
+        label: 'show_whitelisted_responses',
+    },
+    BLOCKED_THREATS: {
+        // FIXME
+        query: 'all',
+        label: 'blocked_threats',
+    },
+    BLOCKED_SAFEBROWSING: {
+        query: 'blocked_safebrowsing',
+        label: 'blocked_safebrowsing',
+    },
+    BLOCKED_ADULT_WEBSITES: {
+        query: 'blocked_parental',
+        label: 'blocked_adult_websites',
+    },
+    ALLOWED: {
+        // FIXME
+        query: 'all',
+        label: 'allowed',
+    },
+    REWRITTEN: {
+        query: 'rewritten',
+        label: 'rewritten',
+    },
+    SAFE_SEARCH: {
+        query: 'safe_search',
+        label: 'safe_search',
+    },
 };
 
 export const DEFAULT_TIME_FORMAT = 'HH:mm:ss';

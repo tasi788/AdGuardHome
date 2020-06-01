@@ -84,18 +84,11 @@ const Form = (props) => {
                     component="select"
                     className={`form-control custom-select custom-select__arrow--left ml-small form-control--transparent ${responseStatusClass}`}
                 >
-                    <option value="">
-                        {t('show_all_responses')}
-                    </option>
-                    <option value={RESPONSE_FILTER.BLOCKED}>
-                        {t('show_blocked_responses')}
-                    </option>
-                    <option value={RESPONSE_FILTER.PROCESSED}>
-                        {t('show_processed_responses')}
-                    </option>
-                    <option value={RESPONSE_FILTER.WHITELISTED}>
-                        {t('show_whitelisted_responses')}
-                    </option>
+                    {Object.values(RESPONSE_FILTER)
+                        .map(({
+                            query,
+                            label,
+                        }) => <option key={label} value={query}>{t(label)}</option>)}
                 </Field>
             </div>
         </form>

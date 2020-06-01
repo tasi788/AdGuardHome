@@ -512,6 +512,12 @@
     "show_blocked_responses": "Blocked",
     "show_whitelisted_responses": "Whitelisted",
     "show_processed_responses": "Processed",
+    "blocked_safebrowsing": "Blocked Safebrowsing",
+    "blocked_adult_websites": "Blocked Adult Websites",
+    "blocked_threats": "Blocked Threats",
+    "allowed": "Allowed",
+    "filtered": "Filtered",
+    "rewritten": "Rewritten",
     "safe_search": "Safe search",
     "blocklist": "Blocklist",
     "milliseconds_abbreviation": "ms"

@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { nanoid } from 'nanoid';
 import { Trans } from 'react-i18next';
+import PropTypes from 'prop-types';
 import getHintElement from './getHintElement';
 import {
     checkFiltered,
@@ -44,7 +45,10 @@ const processContent = (data, buttonType) => Object.entries(data)
         </React.Fragment>;
     });
 
-const getDomainCell = (row, t, isDetailed, toggleBlocking, autoClients) => {
+const getDomainCell = (props) => {
+    const {
+        row, t, isDetailed, toggleBlocking, autoClients, dnssec_enabled,
+    } = props;
     const {
         value, original: {
             time, tracker, elapsedMs, reason, domain, response,
@@ -170,9 +174,10 @@ const getDomainCell = (row, t, isDetailed, toggleBlocking, autoClients) => {
 
     return (
         <div className="logs__row o-hidden" title={value}>
-            {dnssecHint}
+            {dnssec_enabled && dnssecHint}
             {trackerHint}
-            <div className={`${isDetailed ? 'px-2 w-100 d-flex justify-content-center flex-column' : ''}`}>
+            <div
+                className={`${isDetailed ? 'px-2 w-100 d-flex justify-content-center flex-column' : ''}`}>
                 <div className="logs__text o-hidden text-truncate">{value}</div>
                 {(ip || protocol) && isDetailed
                 && <div className="detailed-info d-none d-sm-block">
@@ -183,6 +188,15 @@ const getDomainCell = (row, t, isDetailed, toggleBlocking, autoClients) => {
         </div>
 
     );
+};
+
+getDomainCell.propTypes = {
+    row: PropTypes.obj.isRequired,
+    t: PropTypes.func.isRequired,
+    isDetailed: PropTypes.bool.isRequired,
+    toggleBlocking: PropTypes.func.isRequired,
+    autoClients: PropTypes.array.isRequired,
+    dnssec_enabled: PropTypes.bool.isRequired,
 };
 
 export default getDomainCell;

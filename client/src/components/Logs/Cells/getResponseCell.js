@@ -29,7 +29,7 @@ const getFilterName = (filters, whitelistFilters, filterId, t) => {
 const getResponseCell = (row, filtering, t, isDetailed) => {
     const { value: responses, original } = row;
     const {
-        reason, filterId, rule, status, domain, elapsedMs,
+        reason, filterId, rule, status, upstream, elapsedMs,
     } = original;
 
     const { filters, whitelistFilters } = filtering;
@@ -42,9 +42,9 @@ const getResponseCell = (row, filtering, t, isDetailed) => {
     const FILTERED_STATUS_TO_FIELDS_MAP = {
         [FILTERED_STATUS.NOT_FILTERED_NOT_FOUND]: {
             encryption_status: boldStatusLabel,
-            install_settings_dns: domain,
+            install_settings_dns: upstream,
             elapsed: formattedElapsedMs,
-            request_table_header: responses && responses.join('\n'),
+            response_table_header: responses && responses.join('\n'),
         },
         [FILTERED_STATUS.FILTERED_BLOCKED_SERVICE]: {
             encryption_status: boldStatusLabel,
@@ -54,12 +54,12 @@ const getResponseCell = (row, filtering, t, isDetailed) => {
         },
         [FILTERED_STATUS.FILTERED_SAFE_SEARCH]: {
             encryption_status: boldStatusLabel,
-            install_settings_dns: domain,
+            install_settings_dns: upstream,
             elapsed: formattedElapsedMs,
         },
         [FILTERED_STATUS.FILTERED_BLACK_LIST]: {
             encryption_status: boldStatusLabel,
-            install_settings_dns: domain,
+            install_settings_dns: upstream,
             elapsed: formattedElapsedMs,
         },
     };
@@ -84,7 +84,7 @@ const getResponseCell = (row, filtering, t, isDetailed) => {
             <div>
                 <div>{statusLabel}</div>
                 {isDetailed && <div
-                    className="detailed-info d-none d-sm-block pt-1 w-85 o-hidden text-truncate">{detailedInfo}</div>}
+                    className="detailed-info d-none d-sm-block pt-1 o-hidden text-truncate">{detailedInfo}</div>}
             </div>
         </div>
     );
