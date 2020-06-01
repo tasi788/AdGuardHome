@@ -496,7 +496,7 @@ func TestBlockedCustomIP(t *testing.T) {
 	c := dnsfilter.Config{}
 
 	f := dnsfilter.New(&c, filters)
-	s := NewServer(f, nil, nil)
+	s := NewServer(DNSCreateParams{DNSFilter: f})
 	conf := ServerConfig{}
 	conf.UDPListenAddr = &net.UDPAddr{Port: 0}
 	conf.TCPListenAddr = &net.TCPAddr{Port: 0}
@@ -645,7 +645,7 @@ func createTestServer(t *testing.T) *Server {
 	c.CacheTime = 30
 
 	f := dnsfilter.New(&c, filters)
-	s := NewServer(f, nil, nil)
+	s := NewServer(DNSCreateParams{DNSFilter: f})
 	s.conf.UDPListenAddr = &net.UDPAddr{Port: 0}
 	s.conf.TCPListenAddr = &net.TCPAddr{Port: 0}
 	s.conf.UpstreamDNS = []string{"8.8.8.8:53", "8.8.4.4:53"}

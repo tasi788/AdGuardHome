@@ -11,7 +11,7 @@ import (
 
 func prepareTestDNSServer() error {
 	config.DNS.Port = 1234
-	Context.dnsServer = dnsforward.NewServer(nil, nil, nil)
+	Context.dnsServer = dnsforward.NewServer(dnsforward.DNSCreateParams{})
 	conf := &dnsforward.ServerConfig{}
 	uc, err := proxy.ParseUpstreamsConfig([]string{"1.1.1.1"}, nil, time.Second*5)
 	if err != nil {
