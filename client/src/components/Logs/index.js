@@ -36,6 +36,7 @@ class Logs extends Component {
         this.props.getFilteringStatus();
         this.props.getLogsConfig();
         this.props.getClients();
+        this.props.getDnsConfig();
     }
 
     getLogs = (older_than, page, initial) => {
@@ -131,6 +132,7 @@ Logs.propTypes = {
     setRules: PropTypes.func.isRequired,
     addSuccessToast: PropTypes.func.isRequired,
     getClients: PropTypes.func.isRequired,
+    getDnsConfig: PropTypes.func.isRequired,
     getLogsConfig: PropTypes.func.isRequired,
     setLogsPagination: PropTypes.func.isRequired,
     setLogsFilter: PropTypes.func.isRequired,

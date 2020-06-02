@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react';
-import { nanoid } from 'nanoid';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CustomTooltip from '../Tooltip/CustomTooltip';
 
@@ -18,17 +17,24 @@ const getHintElement = ({
     scrollHide,
     renderContent,
 }) => {
-    const id = nanoid();
+    const id = 'id';
 
-    return <Fragment>
-        <div data-tip={dataTip} data-for={dataTip ? id : undefined}
+    const [isHovered, hover] = useState(false);
+
+    const openTooltip = () => hover(true);
+    const closeTooltip = () => hover(false);
+
+    return <div onMouseEnter={openTooltip}
+                onMouseLeave={closeTooltip}>
+        <div data-tip={dataTip}
+             data-for={dataTip ? id : undefined}
              data-event={trigger}
         >
             {xlinkHref && <svg className={className}>
                 <use xlinkHref={`#${xlinkHref}`} />
             </svg>}
         </div>
-        {dataTip
+        {isHovered && dataTip
         && <CustomTooltip
             className={tooltipClass}
             id={id}
@@ -41,7 +47,7 @@ const getHintElement = ({
             scrollHide={scrollHide}
             renderContent={renderContent}
         />}
-    </Fragment>;
+    </div>;
 };
 getHintElement.propTypes = {
     className: PropTypes.string,

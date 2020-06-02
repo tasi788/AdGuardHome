@@ -6,6 +6,7 @@ import {
 } from '../actions/queryLogs';
 import Logs from '../components/Logs';
 import { addSuccessToast } from '../actions/toasts';
+import { getDnsConfig } from '../actions/dnsConfig';
 
 const mapStateToProps = (state) => {
     const {
@@ -29,6 +30,7 @@ const mapDispatchToProps = {
     setLogsFilter,
     setLogsPage,
     toggleDetailedLogs,
+    getDnsConfig,
 };
 
 export default connect(

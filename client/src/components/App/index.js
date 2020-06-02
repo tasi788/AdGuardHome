@@ -99,7 +99,7 @@ class App extends Component {
                                 <div className="col-lg-12">
                                     <Status reloadPage={this.reloadPage}
                                             message="dns_start"
-                                        />
+                                    />
                                     <Loading />
                                 </div>
                             </div>

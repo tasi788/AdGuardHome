@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 
 import * as actions from '../actions/queryLogs';
-import { DEFAULT_LOGS_FILTER } from '../helpers/constants';
+import { DEFAULT_LOGS_FILTER, TABLE_DEFAULT_PAGE_SIZE } from '../helpers/constants';
 
 const queryLogs = handleActions(
     {
@@ -36,13 +36,13 @@ const queryLogs = handleActions(
         [actions.setLogsFilterFailure]: (state) => ({ ...state, processingGetLogs: false }),
         [actions.setLogsFilterSuccess]: (state, { payload }) => {
             const { logs, oldest, filter } = payload;
-            const pageSize = 10;
+            const pageSize = TABLE_DEFAULT_PAGE_SIZE;
             const page = 0;
 
             const pages = Math.ceil(logs.length / pageSize);
             const total = logs.length;
             const rowsStart = pageSize * page;
-            const rowsEnd = (pageSize * page) + pageSize;
+            const rowsEnd = rowsStart + pageSize;
             const logsSlice = logs.slice(rowsStart, rowsEnd);
             const isFiltered = Object.keys(filter).some((key) => filter[key]);
 
@@ -73,7 +73,7 @@ const queryLogs = handleActions(
                 allLogs = [...state.allLogs, ...logs];
             }
 
-            const pages = Math.floor(logsWithOffset.length / pageSize);
+            const pages = Math.ceil(logsWithOffset.length / pageSize);
             const total = logsWithOffset.length;
             const rowsStart = pageSize * page;
             const rowsEnd = (pageSize * page) + pageSize;
