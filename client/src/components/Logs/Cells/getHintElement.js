@@ -16,6 +16,7 @@ const getHintElement = ({
     overridePosition,
     scrollHide,
     renderContent,
+    hoverElement,
 }) => {
     const id = 'id';
 
@@ -33,6 +34,7 @@ const getHintElement = ({
             {xlinkHref && <svg className={className}>
                 <use xlinkHref={`#${xlinkHref}`} />
             </svg>}
+            {hoverElement && hoverElement}
         </div>
         {isHovered && dataTip
         && <CustomTooltip
@@ -69,6 +71,7 @@ getHintElement.propTypes = {
         PropTypes.array,
     ]),
     renderContent: PropTypes.arrayOf(PropTypes.element),
+    hoverElement: PropTypes.element,
 };
 
 export default getHintElement;

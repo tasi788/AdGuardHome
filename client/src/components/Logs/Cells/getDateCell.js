@@ -15,7 +15,7 @@ const getDateCell = (row, isDetailed) => {
 
     return (
         <div className="logs__cell">
-            <div className="logs__time text-truncate">
+            <div className="logs__time">
                 {formatTime(value, DEFAULT_TIME_FORMAT)}
             </div>
             {isDetailed

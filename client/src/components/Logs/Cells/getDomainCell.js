@@ -178,7 +178,7 @@ const getDomainCell = (props) => {
             {trackerHint}
             <div
                 className={`w-90 ${isDetailed ? 'px-2 d-flex justify-content-center flex-column' : ''}`}>
-                <div className="logs__text text-truncate">{value}</div>
+                <div className="text-truncate">{value}</div>
                 {(ip || protocol) && isDetailed
                 && <div className="detailed-info d-none d-sm-block text-truncate">
                     {`${ip}${ip && protocol && ', '}${protocol}`}
