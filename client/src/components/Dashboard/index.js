@@ -42,7 +42,7 @@ class Dashboard extends Component {
     };
 
     toggleClientStatus = (type, ip) => {
-        const confirmMessage = type === BLOCK_ACTIONS.block ? 'client_confirm_block' : 'client_confirm_unblock';
+        const confirmMessage = type === BLOCK_ACTIONS.BLOCK ? 'client_confirm_block' : 'client_confirm_unblock';
 
         if (window.confirm(this.props.t(confirmMessage, { ip }))) {
             this.props.toggleClientBlock(type, ip);

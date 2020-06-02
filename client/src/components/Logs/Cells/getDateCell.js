@@ -15,11 +15,11 @@ const getDateCell = (row, isDetailed) => {
 
     return (
         <div className="logs__cell">
-            <div className="logs__time">
+            <div className="logs__time text-truncate">
                 {formatTime(value, DEFAULT_TIME_FORMAT)}
             </div>
             {isDetailed
-            && <div className="detailed-info d-none d-sm-block">
+            && <div className="detailed-info d-none d-sm-block text-truncate">
                 {formatDateTime(value, DEFAULT_SHORT_DATE_FORMAT_OPTIONS)}
             </div>
             }

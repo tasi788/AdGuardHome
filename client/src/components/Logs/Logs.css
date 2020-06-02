@@ -90,16 +90,28 @@
     cursor: pointer;
 }
 
-.logs__action,
-.table__action {
-    position: absolute;
-    top: 11px;
-    right: 15px;
+.button__action {
     background-color: #fff;
     border-radius: 4px;
     transition: opacity 0.2s ease, visibility 0.2s ease;
     visibility: hidden;
     opacity: 0;
+}
+
+.table__action {
+    position: absolute;
+    top: 11px;
+    right: 15px;
+}
+
+.logs__action {
+    position: absolute;
+    top: 0px;
+    right: 15px;
+}
+
+.logs__action--detailed {
+    top: 5px;
 }
 
 .logs__table .rt-td,
@@ -224,9 +236,14 @@
     background-color: #fff;
     border: 0;
     border-radius: 8px;
-    min-height: 50rem;
+    min-height: 42rem;
     max-width: 71rem;
 }
+
+.logs__table--detailed {
+    min-height: 50rem;
+}
+
 
 @media (max-width: 575px) {
     .logs__table {
@@ -421,11 +438,6 @@
 
 .link--green {
     color: var(--green79);
-}
-
-.menu--dots {
-    height: 2.25rem !important;
-    transform: translate(10px, 2px);
 }
 
 .row--detailed {

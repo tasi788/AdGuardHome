@@ -427,8 +427,8 @@ export const DETAILED_DATE_FORMAT_OPTIONS = {
 export const CUSTOM_FILTERING_RULES_ID = 0;
 
 export const BLOCK_ACTIONS = {
-    block: 'block',
-    unblock: 'unblock',
+    BLOCK: 'block',
+    UNBLOCK: 'unblock',
 };
 
 export const RECORD_TO_IP_MAP = {

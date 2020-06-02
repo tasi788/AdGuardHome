@@ -57,9 +57,9 @@ export const toggleClientBlock = (type, ip) => async (dispatch) => {
         } = await apiClient.getAccessList();
         let updatedDisallowedClients = disallowed_clients || [];
 
-        if (type === BLOCK_ACTIONS.unblock && updatedDisallowedClients.includes(ip)) {
+        if (type === BLOCK_ACTIONS.UNBLOCK && updatedDisallowedClients.includes(ip)) {
             updatedDisallowedClients = updatedDisallowedClients.filter((client) => client !== ip);
-        } else if (type === BLOCK_ACTIONS.block && !updatedDisallowedClients.includes(ip)) {
+        } else if (type === BLOCK_ACTIONS.BLOCK && !updatedDisallowedClients.includes(ip)) {
             updatedDisallowedClients.push(ip);
         }
 
@@ -72,9 +72,9 @@ export const toggleClientBlock = (type, ip) => async (dispatch) => {
         await apiClient.setAccessList(values);
         dispatch(toggleClientBlockSuccess(values));
 
-        if (type === BLOCK_ACTIONS.unblock) {
+        if (type === BLOCK_ACTIONS.UNBLOCK) {
             dispatch(addSuccessToast(i18next.t('client_unblocked', { ip })));
-        } else if (type === BLOCK_ACTIONS.block) {
+        } else if (type === BLOCK_ACTIONS.BLOCK) {
             dispatch(addSuccessToast(i18next.t('client_blocked', { ip })));
         }
     } catch (error) {

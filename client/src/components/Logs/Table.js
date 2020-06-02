@@ -27,8 +27,8 @@ class Table extends Component {
         const baseRule = `||${domain}^$important`;
         const baseUnblocking = `@@${baseRule}`;
 
-        const blockingRule = type === BLOCK_ACTIONS.block ? baseUnblocking : baseRule;
-        const unblockingRule = type === BLOCK_ACTIONS.block ? baseRule : baseUnblocking;
+        const blockingRule = type === BLOCK_ACTIONS.BLOCK ? baseUnblocking : baseRule;
+        const unblockingRule = type === BLOCK_ACTIONS.BLOCK ? baseRule : baseUnblocking;
         const preparedBlockingRule = new RegExp(`(^|\n)${escapeRegExp(blockingRule)}($|\n)`);
         const preparedUnblockingRule = new RegExp(`(^|\n)${escapeRegExp(unblockingRule)}($|\n)`);
 
@@ -125,13 +125,23 @@ class Table extends Component {
                 </div>;
             },
             accessor: 'client',
-            Cell: (row) => getClientCell(
-                row,
-                this.props.t,
-                this.props.isDetailed,
-                this.toggleBlocking,
-                this.props.autoClients,
-            ),
+            Cell: (row) => {
+                const {
+                    t,
+                    isDetailed,
+                    autoClients,
+                    filtering: { processingRules },
+                } = this.props;
+
+                return getClientCell({
+                    row,
+                    t,
+                    isDetailed,
+                    toggleBlocking: this.toggleBlocking,
+                    autoClients,
+                    processingRules,
+                });
+            },
             minWidth: 123,
             maxHeight: 60,
             headerClassName: 'logs__text',
@@ -179,6 +189,10 @@ class Table extends Component {
 
         const isLoading = processingGetLogs || processingGetConfig || this.props.loading;
 
+        const tableClass = classNames('logs__table', {
+            'logs__table--detailed': this.props.isDetailed,
+        });
+
         return (
             <ReactTable
                 manual
@@ -195,7 +209,7 @@ class Table extends Component {
                 showPageSizeOptions={false}
                 onFetchData={this.fetchData}
                 onPageChange={this.changePage}
-                className="logs__table"
+                className={tableClass}
                 defaultPageSize={TABLE_DEFAULT_PAGE_SIZE}
                 loadingText={t('loading_table_status')}
                 rowsText={t('rows_table_footer_text')}

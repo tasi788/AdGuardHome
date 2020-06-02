@@ -42,7 +42,7 @@ const renderBlockingButton = (ipMatchListStatus, ip, handleClick, processing) =>
         };
 
     return (
-        <div className="table__action">
+        <div className="table__action button__action">
             <button
                 type="button"
                 className={`btn btn-sm ${buttonProps.className}`}

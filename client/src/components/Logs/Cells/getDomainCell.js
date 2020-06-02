@@ -106,7 +106,7 @@ const getDomainCell = (props) => {
 
     const formattedElapsedMs = formatElapsedMs(elapsedMs, t);
     const isFiltered = checkFiltered(reason);
-    const buttonType = isFiltered ? BLOCK_ACTIONS.unblock : BLOCK_ACTIONS.block;
+    const buttonType = isFiltered ? BLOCK_ACTIONS.UNBLOCK : BLOCK_ACTIONS.BLOCK;
 
     const onToggleBlock = () => {
         toggleBlocking(buttonType, domain);
@@ -177,10 +177,10 @@ const getDomainCell = (props) => {
             {dnssec_enabled && dnssecHint}
             {trackerHint}
             <div
-                className={`${isDetailed ? 'px-2 w-100 d-flex justify-content-center flex-column' : ''}`}>
-                <div className="logs__text o-hidden text-truncate">{value}</div>
+                className={`w-90 ${isDetailed ? 'px-2 d-flex justify-content-center flex-column' : ''}`}>
+                <div className="logs__text text-truncate">{value}</div>
                 {(ip || protocol) && isDetailed
-                && <div className="detailed-info d-none d-sm-block">
+                && <div className="detailed-info d-none d-sm-block text-truncate">
                     {`${ip}${ip && protocol && ', '}${protocol}`}
                 </div>}
             </div>
@@ -191,7 +191,7 @@ const getDomainCell = (props) => {
 };
 
 getDomainCell.propTypes = {
-    row: PropTypes.obj.isRequired,
+    row: PropTypes.object.isRequired,
     t: PropTypes.func.isRequired,
     isDetailed: PropTypes.bool.isRequired,
     toggleBlocking: PropTypes.func.isRequired,

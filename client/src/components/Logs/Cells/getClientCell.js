@@ -1,12 +1,15 @@
 import React from 'react';
 import { nanoid } from 'nanoid';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import { formatClientCell } from '../../../helpers/formatClientCell';
 import getHintElement from './getHintElement';
-import CustomTooltip from '../Tooltip/CustomTooltip';
 import { checkFiltered } from '../../../helpers/helpers';
 import { BLOCK_ACTIONS } from '../../../helpers/constants';
 
-const getClientCell = (row, t, isDetailed, toggleBlocking, autoClients) => {
+const getClientCell = ({
+    row, t, isDetailed, toggleBlocking, autoClients, processingRules,
+}) => {
     const {
         upstream, reason, client, domain, info: { name },
     } = row.original;
@@ -29,46 +32,68 @@ const getClientCell = (row, t, isDetailed, toggleBlocking, autoClients) => {
         .filter(([, value]) => Boolean(value));
 
     const isFiltered = checkFiltered(reason);
-    const buttonType = isFiltered ? BLOCK_ACTIONS.unblock : BLOCK_ACTIONS.block;
 
-    const optionsToHandlerMap = {
-        [buttonType]: () => toggleBlocking(buttonType, domain),
+    const nameClass = classNames('w-90 o-hidden d-flex flex-column', {
+        'mt-2': isDetailed && !name,
+    });
+
+    const hintClass = classNames('icons mr-4 icon--small cursor--pointer icon--light-gray', {
+        'my-3': isDetailed,
+    });
+
+    const renderBlockingButton = (isFiltered, domain) => {
+        const buttonType = isFiltered ? BLOCK_ACTIONS.UNBLOCK : BLOCK_ACTIONS.BLOCK;
+
+        const buttonClass = classNames('logs__action button__action', {
+            'btn-outline-secondary': isFiltered,
+            'btn-outline-danger': !isFiltered,
+            'logs__action--detailed': isDetailed,
+        });
+
+        return (
+            <div className={buttonClass}>
+                <button
+                    type="button"
+                    className={`btn btn-sm ${buttonClass}`}
+                    onClick={() => toggleBlocking(buttonType, domain)}
+                    disabled={processingRules}
+                >
+                    {t(buttonType)}
+                </button>
+            </div>
+        );
     };
 
-    const options = Object.entries(optionsToHandlerMap)
-        .map(([option, handler]) => <div key={option} onClick={handler}
-                                         className='text-truncate'>{t(option)}</div>);
-
     return (
-        <div className="logs__row o-hidden justify-content-between h-100">
+        <div className="logs__row o-hidden h-100">
+            {processedData && getHintElement({
+                className: hintClass,
+                tooltipClass: 'px-5 pb-5 pt-4',
+                dataTip: true,
+                xlinkHref: 'question',
+                contentItemClass: 'text-pre text-truncate key-colon',
+                title: 'client_details',
+                content: processedData,
+                place: 'bottom',
+            })}
             <div
-                className={`w-90 o-hidden d-flex flex-column ${isDetailed && !name && 'justify-content-center'}`}>
-                <div data-tip={true} data-for={id}
-                     className="cursor--pointer">{formatClientCell(row, t, isDetailed)}</div>
+                className={nameClass}>
+                <div data-tip={true} data-for={id}>{formatClientCell(row, t, isDetailed)}</div>
                 {isDetailed && name
                 && <div className="detailed-info d-none d-sm-block logs__text">{name}</div>}
             </div>
-            {processedData.length > 0
-            && <CustomTooltip
-                id={id}
-                place='bottom'
-                title='client_details'
-                contentItemClass='key-colon'
-                className='pt-4 pb-5 px-5'
-                content={processedData}
-            />}
-            {getHintElement({
-                className: `icons menu--dots icon--small cursor--pointer ${isDetailed ? 'my-3' : ''}`,
-                dataTip: true,
-                xlinkHref: 'options_dots',
-                contentItemClass: 'tooltip__option w-100',
-                columnClass: 'h-100 grid__one-row',
-                content: options,
-                place: 'bottom',
-                tooltipClass: 'p-0 py-45',
-            })}
+            {renderBlockingButton(isFiltered, domain)}
         </div>
     );
+};
+
+getClientCell.propTypes = {
+    row: PropTypes.object.isRequired,
+    t: PropTypes.func.isRequired,
+    isDetailed: PropTypes.bool.isRequired,
+    toggleBlocking: PropTypes.func.isRequired,
+    autoClients: PropTypes.array.isRequired,
+    processingRules: PropTypes.bool.isRequired,
 };
 
 export default getClientCell;
