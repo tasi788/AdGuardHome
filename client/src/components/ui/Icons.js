@@ -346,26 +346,6 @@ const Icons = () => (
                 </g>
             </svg>
         </symbol>
-
-        <symbol id="options_dots" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5">
-            <g id="Log" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                <g id="Desktop/Menu-Copy-2" transform="translate(-1490.000000, -382.000000)">
-                    <g id="Group-6-Copy" transform="translate(416.000000, 362.000000)">
-                        <g id="Icons/24/options-cell" transform="translate(1064.000000, 14.000000)">
-                            <g id="Group-21">
-                                <rect id="Rectangle" x="0" y="0" width="24" height="24"></rect>
-                            </g>
-                            <g id="Group" transform="translate(10.000000, 6.000000)" fill="#67B279">
-                                <circle id="Oval" cx="1.5" cy="1.5" r="1.5"></circle>
-                                <circle id="Oval-Copy" cx="1.5" cy="6.5" r="1.5"></circle>
-                                <circle id="Oval-Copy-2" cx="1.5" cy="11.5" r="1.5"></circle>
-                            </g>
-                        </g>
-                    </g>
-                </g>
-            </g>
-        </symbol>
     </svg>
 );
 

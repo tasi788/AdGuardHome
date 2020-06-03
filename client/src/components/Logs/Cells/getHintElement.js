@@ -51,6 +51,7 @@ const getHintElement = ({
         />}
     </div>;
 };
+
 getHintElement.propTypes = {
     className: PropTypes.string,
     contentItemClass: PropTypes.string,

@@ -129,7 +129,7 @@ const getDomainCell = (props) => {
         ip_address: client,
         country,
         network,
-        validated_with_dnssec: Boolean(answer_dnssec),
+        validated_with_dnssec: dnssec_enabled ? Boolean(answer_dnssec) : false,
         [buttonType]: <div onClick={onToggleBlock}
                            className="title--border bg--danger">{t(buttonType)}</div>,
     };
@@ -153,37 +153,44 @@ const getDomainCell = (props) => {
 
     const detailedDataCurrent = isFiltered ? detailedDataBlocked : detailedData;
 
+    const ip = RECORD_TO_IP_MAP[type] || '';
+
+    const protocol = t(getProtocolName(upstream));
+    const valueClass = classNames('w-90', {
+        'px-2 d-flex justify-content-center flex-column': isDetailed,
+    });
+
+    const columnClass = classNames('pb-2', {
+        'logs--detailed--blocked': isFiltered,
+        'logs--detailed': !isFiltered,
+    });
+
     const detailedHint = getHintElement({
         className: 'icons icon--small d-block d-md-none icon--active icon--detailed-info',
         tooltipClass: 'ml-0 w-100 mh-100 pt-4 pb-2 h-85',
         dataTip: true,
-        xlinkHref: 'options_dots',
         contentItemClass: 'text-pre text-truncate key-colon',
         renderContent: processContent(detailedDataCurrent, buttonType),
         trigger: 'click',
-        columnClass: `pb-2 ${isFiltered ? 'logs--detailed--blocked' : 'logs--detailed'}`,
+        columnClass,
         overridePosition: () => ({
             left: 0,
             top: 47,
         }),
         scrollHide: false,
+        hoverElement: <div className={valueClass}>
+            <div className="text-truncate">{value}</div>
+            {(ip || protocol) && isDetailed
+            && <div className="detailed-info d-none d-sm-block text-truncate">
+                {`${ip}${ip && protocol && ', '}${protocol}`}
+            </div>}
+        </div>,
     });
 
-    const ip = RECORD_TO_IP_MAP[type] || '';
-    const protocol = t(getProtocolName(upstream));
-
     return (
-        <div className="logs__row o-hidden" title={value}>
+        <div className="o-hidden" title={value}>
             {dnssec_enabled && dnssecHint}
             {trackerHint}
-            <div
-                className={`w-90 ${isDetailed ? 'px-2 d-flex justify-content-center flex-column' : ''}`}>
-                <div className="text-truncate">{value}</div>
-                {(ip || protocol) && isDetailed
-                && <div className="detailed-info d-none d-sm-block text-truncate">
-                    {`${ip}${ip && protocol && ', '}${protocol}`}
-                </div>}
-            </div>
             {detailedHint}
         </div>
 
