@@ -86,9 +86,9 @@ const Form = (props) => {
                 >
                     {Object.values(RESPONSE_FILTER)
                         .map(({
-                            query,
-                            label,
-                        }) => <option key={label} value={query}>{t(label)}</option>)}
+                            query, label, disabled,
+                        }) => <option key={label} value={query}
+                                      disabled={disabled}>{t(label)}</option>)}
                 </Field>
             </div>
         </form>

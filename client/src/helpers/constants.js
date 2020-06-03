@@ -362,31 +362,25 @@ export const RESPONSE_FILTER = {
         query: 'processed',
         label: 'show_processed_responses',
     },
-    // FIXME: visual space
+    SPACE: {
+        query: 'all',
+        label: '',
+        disabled: true,
+    },
     BLOCKED: {
         query: 'blocked',
         label: 'show_blocked_responses',
     },
-    WHITELISTED: {
-        query: 'whitelisted',
-        label: 'show_whitelisted_responses',
-    },
     BLOCKED_THREATS: {
-        // FIXME
-        query: 'all',
-        label: 'blocked_threats',
-    },
-    BLOCKED_SAFEBROWSING: {
         query: 'blocked_safebrowsing',
-        label: 'blocked_safebrowsing',
+        label: 'blocked_threats',
     },
     BLOCKED_ADULT_WEBSITES: {
         query: 'blocked_parental',
         label: 'blocked_adult_websites',
     },
     ALLOWED: {
-        // FIXME
-        query: 'all',
+        query: 'whitelisted',
         label: 'allowed',
     },
     REWRITTEN: {
