@@ -147,8 +147,13 @@ const Logs = (props) => {
                            style={{
                                content: {
                                    width: '100%',
+                                   height: 'fit-content',
                                    left: 0,
                                    top: 47,
+                                   padding: '1rem 1.5rem 1rem',
+                               },
+                               overlay: {
+                                   backgroundColor: 'rgba(0,0,0,0.5)',
                                },
                            }}
                     >
