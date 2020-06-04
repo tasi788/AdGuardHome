@@ -456,7 +456,6 @@
     "disable_ipv6": "غیرفعالسازی IPv6",
     "disable_ipv6_desc": "اگر این ویژگی فعال شده، همه جستارهای DNS برای آدرس های IPv6 (نوع AAAA) رها میشود.",
     "fastest_addr": "سریعترین آدرس آی پی",
-    "fastest_addr_desc": "جستار همه سرورهای DNS و بازگرداندن سریعترین آدرس IP از میان همه پاسخ ها",
     "autofix_warning_text": "اگر روی \"تعمیر\" کلیک کنید، AdGuardHome سیستم شما را برای استفاده از DNS سرور AdGuardHome پیکربندی می کند.",
     "autofix_warning_list": "این وظایف را اجرا میکند: <0>غیرفعالسازی DNSStubListener سیستم</0> <0>تنظیم آدرس DNS 127.0.0.1</0> سرور به <0>جایگزینی لینک نمادی هدف /etc/resolv.conf به/run/systemd/resolve/resolv.conf</0> <0>توقف DNSStubListener (بارگیری مجدد سرویس systemd-resolved)</0>",
     "autofix_warning_result": "در نتیجه همه درخواست های DNS از سیستم شما بطور پیش فرض با AdGuardHome پردازش خواهد شد.",
