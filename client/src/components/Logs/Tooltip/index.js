@@ -24,18 +24,9 @@ class Tooltip extends React.Component {
                 scrollHide={scrollHide}
                 trigger={trigger}
                 overridePosition={overridePosition}
-                ref={(el) => {
-                    this.tooltip = el;
-                }}
                 globalEventOff="click"
                 clickable
             >
-                <svg className="icon icon--small icon-cross d-block d-md-none cursor--pointer" onClick={() => {
-                    this.tooltip.tooltipRef = null;
-                    ReactTooltip.hide();
-                }}>
-                    <use xlinkHref="#cross" />
-                </svg>
                 {children}
             </ReactTooltip>
         );

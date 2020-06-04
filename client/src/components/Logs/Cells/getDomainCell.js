@@ -1,64 +1,22 @@
 import React from 'react';
 import classNames from 'classnames';
-import { nanoid } from 'nanoid';
-import { Trans } from 'react-i18next';
 import PropTypes from 'prop-types';
 import getHintElement from './getHintElement';
+import { getProtocolName } from '../../../helpers/helpers';
 import {
-    checkFiltered,
-    formatDateTime,
-    formatElapsedMs,
-    formatTime, getProtocolName,
-    REQ_STATUS_TO_LABEL_MAP,
-} from '../../../helpers/helpers';
-import {
-    BLOCK_ACTIONS,
-    DEFAULT_SHORT_DATE_FORMAT_OPTIONS,
-    LONG_TIME_FORMAT,
     RECORD_TO_IP_MAP,
 } from '../../../helpers/constants';
 
-const processContent = (data, buttonType) => Object.entries(data)
-    .map(([key, value]) => {
-        const isTitle = value === 'title';
-        const isButton = key === buttonType;
-        const isBoolean = typeof value === 'boolean';
-        const isHidden = isBoolean && value === false;
-
-        let keyClass = 'key-colon';
-
-        if (isTitle) {
-            keyClass = 'title--border';
-        }
-        if (isButton || isBoolean) {
-            keyClass = '';
-        }
-
-        return isHidden ? null : <React.Fragment key={nanoid()}>
-            <div
-                className={`key__${key} ${keyClass} ${(isBoolean && value === true) ? 'font-weight-bold' : ''}`}>
-                <Trans>{isButton ? value : key}</Trans>
-            </div>
-            <div className={`value__${key} text-pre text-truncate`}>
-                <Trans>{(isTitle || isButton || isBoolean) ? '' : value || '—'}</Trans>
-            </div>
-        </React.Fragment>;
-    });
-
 const getDomainCell = (props) => {
     const {
-        row, t, isDetailed, toggleBlocking, autoClients, dnssec_enabled,
+        row, t, isDetailed, dnssec_enabled,
     } = props;
+
     const {
         value, original: {
-            time, tracker, elapsedMs, reason, domain, response,
-            type, client, answer_dnssec, upstream, info,
+            tracker, type, answer_dnssec, upstream,
         },
     } = row;
-
-    const autoClient = autoClients.find((autoClient) => autoClient.name === client);
-    const country = autoClient && autoClient.whois_info && autoClient.whois_info.country;
-    const network = autoClient && autoClient.whois_info && autoClient.whois_info.orgname;
 
     const hasTracker = !!tracker;
 
@@ -104,96 +62,25 @@ const getDomainCell = (props) => {
         place: 'bottom',
     });
 
-    const formattedElapsedMs = formatElapsedMs(elapsedMs, t);
-    const isFiltered = checkFiltered(reason);
-    const buttonType = isFiltered ? BLOCK_ACTIONS.UNBLOCK : BLOCK_ACTIONS.BLOCK;
-
-    const onToggleBlock = () => {
-        toggleBlocking(buttonType, domain);
-    };
-
-    const status = t(REQ_STATUS_TO_LABEL_MAP[reason] || reason);
-    const statusBlocked = <div className="bg--danger">{status}</div>;
-
-    const detailedData = {
-        time_table_header: formatTime(time, LONG_TIME_FORMAT),
-        data: formatDateTime(time, DEFAULT_SHORT_DATE_FORMAT_OPTIONS),
-        encryption_status: status,
-        domain,
-        details: 'title',
-        install_settings_dns: upstream,
-        elapsed: formattedElapsedMs,
-        request_table_header: response && response.join('\n'),
-        client_details: 'title',
-        name: info && info.name,
-        ip_address: client,
-        country,
-        network,
-        validated_with_dnssec: dnssec_enabled ? Boolean(answer_dnssec) : false,
-        [buttonType]: <div onClick={onToggleBlock}
-                           className="title--border bg--danger">{t(buttonType)}</div>,
-    };
-
-    const detailedDataBlocked = {
-        time_table_header: formatTime(time, LONG_TIME_FORMAT),
-        data: formatDateTime(time, DEFAULT_SHORT_DATE_FORMAT_OPTIONS),
-        encryption_status: statusBlocked,
-        domain,
-        known_tracker: 'title',
-        table_name: hasTracker && tracker.name,
-        category_label: hasTracker && tracker.category,
-        source_label: source && <a href={`//${source}`} className="link--green">{source}</a>,
-        details: 'title',
-        install_settings_dns: upstream,
-        elapsed: formattedElapsedMs,
-        request_table_header: response && response.join('\n'),
-        [buttonType]: <div onClick={onToggleBlock}
-                           className="title--border">{t(buttonType)}</div>,
-    };
-
-    const detailedDataCurrent = isFiltered ? detailedDataBlocked : detailedData;
-
     const ip = RECORD_TO_IP_MAP[type] || '';
 
     const protocol = t(getProtocolName(upstream));
-    const valueClass = classNames('w-90', {
+    const valueClass = classNames('w-100', {
         'px-2 d-flex justify-content-center flex-column': isDetailed,
     });
 
-    const columnClass = classNames('pb-2', {
-        'logs--detailed--blocked': isFiltered,
-        'logs--detailed': !isFiltered,
-    });
-
-    const detailedHint = getHintElement({
-        className: 'icons icon--small d-block d-md-none icon--active icon--detailed-info',
-        tooltipClass: 'ml-0 w-100 mh-100 pt-4 pb-2 h-85',
-        dataTip: true,
-        contentItemClass: 'text-pre text-truncate key-colon',
-        renderContent: processContent(detailedDataCurrent, buttonType),
-        trigger: 'click',
-        columnClass,
-        overridePosition: () => ({
-            left: 0,
-            top: 47,
-        }),
-        scrollHide: false,
-        hoverElement: <div className={valueClass}>
-            <div className="text-truncate">{value}</div>
-            {(ip || protocol) && isDetailed
-            && <div className="detailed-info d-none d-sm-block text-truncate">
-                {`${ip}${ip && protocol && ', '}${protocol}`}
-            </div>}
-        </div>,
-    });
-
     return (
-        <div className="o-hidden" title={value}>
+        <div className="logs__row o-hidden" title={value}>
             {dnssec_enabled && dnssecHint}
             {trackerHint}
-            {detailedHint}
+            <div className={valueClass}>
+                <div className="text-truncate">{value}</div>
+                {(ip || protocol) && isDetailed
+                && <div className="detailed-info d-none d-sm-block text-truncate">
+                    {`${ip}${ip && protocol && ', '}${protocol}`}
+                </div>}
+            </div>
         </div>
-
     );
 };
 

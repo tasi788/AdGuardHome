@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import ReactTable from 'react-table';
@@ -7,6 +7,8 @@ import endsWith from 'lodash/endsWith';
 import escapeRegExp from 'lodash/escapeRegExp';
 import {
     BLOCK_ACTIONS,
+    DEFAULT_SHORT_DATE_FORMAT_OPTIONS,
+    LONG_TIME_FORMAT,
     REASON_TO_COLOR_CLASS_MAP,
     TABLE_DEFAULT_PAGE_SIZE,
     TRANSITION_TIMEOUT,
@@ -16,12 +18,34 @@ import getDomainCell from './Cells/getDomainCell';
 import getClientCell from './Cells/getClientCell';
 import getResponseCell from './Cells/getResponseCell';
 
-class Table extends Component {
-    toggleBlocking = (type, domain) => {
+import {
+    checkFiltered,
+    formatDateTime,
+    formatElapsedMs,
+    formatTime,
+    REQ_STATUS_TO_LABEL_MAP,
+} from '../../helpers/helpers';
+
+const Table = (props) => {
+    const {
+        setDetailedDataCurrent,
+        setButtonType,
+        setModalOpened,
+    } = props;
+
+    useEffect(() => {
+        props.setLoading(false);
+    }, []);
+
+    useEffect(() => {
+        setTimeout(() => props.setLoading(false), TRANSITION_TIMEOUT);
+    }, [props.page]);
+
+    const toggleBlocking = (type, domain) => {
         const {
             t, setRules, getFilteringStatus, addSuccessToast,
-        } = this.props;
-        const { userRules } = this.props.filtering;
+        } = props;
+        const { userRules } = props.filtering;
 
         const lineEnding = !endsWith(userRules, '\n') ? '\n' : '';
         const baseRule = `||${domain}^$important`;
@@ -52,17 +76,17 @@ class Table extends Component {
         getFilteringStatus();
     };
 
-    columns = [
+    const columns = [
         {
-            Header: this.props.t('time_table_header'),
+            Header: props.t('time_table_header'),
             accessor: 'time',
-            Cell: (row) => getDateCell(row, this.props.isDetailed),
+            Cell: (row) => getDateCell(row, props.isDetailed),
             minWidth: 62,
             maxHeight: 60,
             headerClassName: 'logs__text',
         },
         {
-            Header: this.props.t('request_table_header'),
+            Header: props.t('request_table_header'),
             accessor: 'domain',
             Cell: (row) => {
                 const {
@@ -70,13 +94,13 @@ class Table extends Component {
                     isDetailed,
                     autoClients,
                     dnssec_enabled,
-                } = this.props;
+                } = props;
 
                 return getDomainCell({
                     row,
                     t,
                     isDetailed,
-                    toggleBlocking: this.toggleBlocking,
+                    toggleBlocking,
                     autoClients,
                     dnssec_enabled,
                 });
@@ -86,13 +110,13 @@ class Table extends Component {
             headerClassName: 'logs__text',
         },
         {
-            Header: this.props.t('response_table_header'),
+            Header: props.t('response_table_header'),
             accessor: 'response',
             Cell: (row) => getResponseCell(
                 row,
-                this.props.filtering,
-                this.props.t,
-                this.props.isDetailed,
+                props.filtering,
+                props.t,
+                props.isDetailed,
             ),
             minWidth: 100,
             maxHeight: 60,
@@ -101,24 +125,24 @@ class Table extends Component {
         {
             Header: () => {
                 const plainSelected = classNames('cursor--pointer', {
-                    'icon--selected': !this.props.isDetailed,
+                    'icon--selected': !props.isDetailed,
                 });
 
                 const detailedSelected = classNames('cursor--pointer', {
-                    'icon--selected': this.props.isDetailed,
+                    'icon--selected': props.isDetailed,
                 });
 
                 return <div className="d-flex justify-content-between">
-                    {this.props.t('client_table_header')}
+                    {props.t('client_table_header')}
                     {<span>
                         <svg
                             className={`icons icon--small icon--active mr-2 cursor--pointer ${plainSelected}`}
-                            onClick={() => this.props.toggleDetailedLogs(false)}>
+                            onClick={() => props.toggleDetailedLogs(false)}>
                             <use xlinkHref='#list' />
                         </svg>
                     <svg
                         className={`icons icon--small icon--active cursor--pointer ${detailedSelected}`}
-                        onClick={() => this.props.toggleDetailedLogs(true)}>
+                        onClick={() => props.toggleDetailedLogs(true)}>
                         <use xlinkHref='#detailed_list' />
                     </svg>
                     </span>}
@@ -131,13 +155,13 @@ class Table extends Component {
                     isDetailed,
                     autoClients,
                     filtering: { processingRules },
-                } = this.props;
+                } = props;
 
                 return getClientCell({
                     row,
                     t,
                     isDetailed,
-                    toggleBlocking: this.toggleBlocking,
+                    toggleBlocking,
                     autoClients,
                     processingRules,
                 });
@@ -148,9 +172,9 @@ class Table extends Component {
         },
     ];
 
-    fetchData = (state) => {
+    const fetchData = (state) => {
         const { pages } = state;
-        const { oldest, page, getLogs } = this.props;
+        const { oldest, page, getLogs } = props;
         const isLastPage = pages && (page + 1 === pages);
 
         if (isLastPage) {
@@ -158,92 +182,162 @@ class Table extends Component {
         }
     };
 
-    changePage = (page) => {
-        this.props.setLoading(true);
-        this.props.setLogsPage(page);
-        this.props.setLogsPagination({
+    const changePage = (page) => {
+        props.setLoading(true);
+        props.setLogsPage(page);
+        props.setLogsPagination({
             page,
             pageSize: TABLE_DEFAULT_PAGE_SIZE,
         });
     };
 
-    componentDidMount() {
-        this.props.setLoading(false);
-    }
+    const {
+        t,
+        processingGetLogs,
+        processingGetConfig,
+        logs,
+        pages,
+        page,
+    } = props;
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.page !== this.props.page) {
-            setTimeout(() => this.props.setLoading(false), TRANSITION_TIMEOUT);
-        }
-    }
+    const isLoading = processingGetLogs || processingGetConfig || props.loading;
 
-    render() {
-        const {
-            t,
-            processingGetLogs,
-            processingGetConfig,
-            logs,
-            pages,
-            page,
-        } = this.props;
+    const tableClass = classNames('logs__table', {
+        'logs__table--detailed': props.isDetailed,
+    });
 
-        const isLoading = processingGetLogs || processingGetConfig || this.props.loading;
+    return (
+        <ReactTable
+            manual
+            minRows={0}
+            page={page}
+            pages={pages}
+            columns={columns}
+            filterable={false}
+            sortable={false}
+            resizable={false}
+            data={logs || []}
+            loading={isLoading}
+            showPageJump={false}
+            showPageSizeOptions={false}
+            onFetchData={fetchData}
+            onPageChange={changePage}
+            className={tableClass}
+            defaultPageSize={TABLE_DEFAULT_PAGE_SIZE}
+            loadingText={t('loading_table_status')}
+            rowsText={t('rows_table_footer_text')}
+            noDataText={!isLoading
+            && <label className="logs__text logs__text--bold">{t('empty_log')}</label>}
+            pageText=''
+            ofText=''
+            showPagination={logs.length > 0}
+            getPaginationProps={() => ({ className: 'custom-pagination custom-pagination--padding' })}
+            getTbodyProps={() => ({ className: 'd-block' })}
+            previousText={
+                <svg className="icons icon--small icon--gray w-100 h-100 cursor--pointer">
+                    <use xlinkHref="#arrow-left" />
+                </svg>}
+            nextText={
+                <svg className="icons icon--small icon--gray w-100 h-100 cursor--pointer">
+                    <use xlinkHref="#arrow-right" />
+                </svg>}
+            renderTotalPagesCount={() => false}
+            getTrGroupProps={(_state, rowInfo) => {
+                if (!rowInfo) {
+                    return {};
+                }
 
-        const tableClass = classNames('logs__table', {
-            'logs__table--detailed': this.props.isDetailed,
-        });
+                const { reason } = rowInfo.original;
+                const colorClass = REASON_TO_COLOR_CLASS_MAP[reason] || 'white';
 
-        return (
-            <ReactTable
-                manual
-                minRows={0}
-                page={page}
-                pages={pages}
-                columns={this.columns}
-                filterable={false}
-                sortable={false}
-                resizable={false}
-                data={logs || []}
-                loading={isLoading}
-                showPageJump={false}
-                showPageSizeOptions={false}
-                onFetchData={this.fetchData}
-                onPageChange={this.changePage}
-                className={tableClass}
-                defaultPageSize={TABLE_DEFAULT_PAGE_SIZE}
-                loadingText={t('loading_table_status')}
-                rowsText={t('rows_table_footer_text')}
-                noDataText={!isLoading
-                && <label className="logs__text logs__text--bold">{t('empty_log')}</label>}
-                pageText=''
-                ofText=''
-                showPagination={logs.length > 0}
-                getPaginationProps={() => ({ className: 'custom-pagination custom-pagination--padding' })}
-                getTbodyProps={() => ({ className: 'd-block' })}
-                previousText={
-                    <svg className="icons icon--small icon--gray w-100 h-100 cursor--pointer">
-                        <use xlinkHref="#arrow-left" />
-                    </svg>}
-                nextText={
-                    <svg className="icons icon--small icon--gray w-100 h-100 cursor--pointer">
-                        <use xlinkHref="#arrow-right" />
-                    </svg>}
-                renderTotalPagesCount={() => false}
-                getTrGroupProps={(_state, rowInfo) => {
-                    if (!rowInfo) {
-                        return {};
-                    }
+                return { className: colorClass };
+            }}
+            getTrProps={(state, rowInfo) => ({
+                className: props.isDetailed ? 'row--detailed' : '',
+                onClick: () => {
+                    const { dnssec_enabled, autoClients } = props;
+                    const {
+                        answer_dnssec,
+                        client,
+                        domain,
+                        elapsedMs,
+                        info,
+                        reason,
+                        response,
+                        time,
+                        tracker,
+                        upstream,
+                    } = rowInfo.original;
 
-                    const { reason } = rowInfo.original;
-                    const colorClass = REASON_TO_COLOR_CLASS_MAP[reason] || 'white';
+                    const hasTracker = !!tracker;
 
-                    return { className: colorClass };
-                }}
-                getTrProps={() => ({ className: this.props.isDetailed ? 'row--detailed' : '' })}
-            />
-        );
-    }
-}
+                    const autoClient = autoClients.find((autoClient) => autoClient.name === client);
+
+                    const country = autoClient && autoClient.whois_info
+                        && autoClient.whois_info.country;
+
+                    const network = autoClient && autoClient.whois_info
+                        && autoClient.whois_info.orgname;
+                    const formattedElapsedMs = formatElapsedMs(elapsedMs, t);
+                    const isFiltered = checkFiltered(reason);
+
+                    const buttonType = isFiltered ? BLOCK_ACTIONS.UNBLOCK : BLOCK_ACTIONS.BLOCK;
+                    const onToggleBlock = () => {
+                        toggleBlocking(buttonType, domain);
+                    };
+
+                    const source = tracker && tracker.sourceData && tracker.sourceData.name;
+
+                    const status = t(REQ_STATUS_TO_LABEL_MAP[reason] || reason);
+                    const statusBlocked = <div className="bg--danger">{status}</div>;
+
+                    const detailedData = {
+                        time_table_header: formatTime(time, LONG_TIME_FORMAT),
+                        data: formatDateTime(time, DEFAULT_SHORT_DATE_FORMAT_OPTIONS),
+                        encryption_status: status,
+                        domain,
+                        details: 'title',
+                        install_settings_dns: upstream,
+                        elapsed: formattedElapsedMs,
+                        request_table_header: response && response.join('\n'),
+                        client_details: 'title',
+                        name: info && info.name,
+                        ip_address: client,
+                        country,
+                        network,
+                        validated_with_dnssec: dnssec_enabled ? Boolean(answer_dnssec) : false,
+                        [buttonType]: <div onClick={onToggleBlock}
+                                           className="title--border bg--danger">{t(buttonType)}</div>,
+                    };
+
+                    const detailedDataBlocked = {
+                        time_table_header: formatTime(time, LONG_TIME_FORMAT),
+                        data: formatDateTime(time, DEFAULT_SHORT_DATE_FORMAT_OPTIONS),
+                        encryption_status: statusBlocked,
+                        domain,
+                        known_tracker: 'title',
+                        table_name: hasTracker && tracker.name,
+                        category_label: hasTracker && tracker.category,
+                        source_label: source
+                            && <a href={`//${source}`} className="link--green">{source}</a>,
+                        details: 'title',
+                        install_settings_dns: upstream,
+                        elapsed: formattedElapsedMs,
+                        request_table_header: response && response.join('\n'),
+                        [buttonType]: <div onClick={onToggleBlock}
+                                           className="title--border">{t(buttonType)}</div>,
+                    };
+
+                    const detailedDataCurrent = isFiltered ? detailedDataBlocked : detailedData;
+
+                    setDetailedDataCurrent(detailedDataCurrent);
+                    setButtonType(buttonType);
+                    setModalOpened(true);
+                },
+            })}
+        />
+    );
+};
 
 Table.propTypes = {
     logs: PropTypes.array.isRequired,
@@ -267,6 +361,9 @@ Table.propTypes = {
     loading: PropTypes.bool.isRequired,
     setLoading: PropTypes.func.isRequired,
     dnssec_enabled: PropTypes.bool.isRequired,
+    setDetailedDataCurrent: PropTypes.func.isRequired,
+    setButtonType: PropTypes.func.isRequired,
+    setModalOpened: PropTypes.func.isRequired,
 };
 
 export default withTranslation()(Table);
