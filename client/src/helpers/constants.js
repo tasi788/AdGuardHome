@@ -53,7 +53,7 @@ export const STANDARD_HTTPS_PORT = 443;
 export const EMPTY_DATE = '0001-01-01T00:00:00Z';
 
 export const DEBOUNCE_TIMEOUT = 300;
-export const DEBOUNCE_FILTER_TIMEOUT = 200;
+export const DEBOUNCE_FILTER_TIMEOUT = 500;
 export const TRANSITION_TIMEOUT = 250;
 export const CHECK_TIMEOUT = 1000;
 export const SUCCESS_TOAST_TIMEOUT = 5000;
@@ -455,3 +455,5 @@ export const IP_MATCH_LIST_STATUS = {
     EXACT: 'EXACT', // found exact match (ip === ip)
     CIDR: 'CIDR', // the ip is in the specified CIDR range
 };
+
+export const isSmallScreen = window.outerWidth < 576;

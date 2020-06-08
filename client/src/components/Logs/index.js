@@ -1,11 +1,10 @@
-import React, {
-    Fragment, useEffect, useState,
-} from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Trans, withTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { nanoid } from 'nanoid';
 import {
+    isSmallScreen,
     BLOCK_ACTIONS,
     TABLE_DEFAULT_PAGE_SIZE,
     TABLE_FIRST_PAGE,
@@ -142,7 +141,7 @@ const Logs = (props) => {
                         setButtonType={setButtonType}
                         setModalOpened={setModalOpened}
                     />
-                    <Modal portalClassName='grid' isOpen={window.outerWidth < 576 && isModalOpened}
+                    <Modal portalClassName='grid' isOpen={isSmallScreen && isModalOpened}
                            onRequestClose={closeModal}
                            style={{
                                content: {

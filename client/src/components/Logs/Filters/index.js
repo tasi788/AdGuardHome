@@ -8,15 +8,16 @@ import Form from './Form';
 
 class Filters extends Component {
     getFilters = ({
-        search, response_status,
+        search = '',
+        response_status,
     }) => ({
-        search: search || '',
+        search,
         response_status,
     });
 
-    handleFormChange = debounce((values) => {
+    handleFormChange = debounce(async (values) => {
         const filter = this.getFilters(values);
-        this.props.setLogsFilter(filter);
+        await this.props.setLogsFilter(filter);
     }, DEBOUNCE_FILTER_TIMEOUT);
 
     render() {

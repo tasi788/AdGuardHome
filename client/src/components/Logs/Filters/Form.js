@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { withTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ const renderFilterField = ({
     autoComplete,
     tooltip,
     meta: { touched, error },
-}) => <Fragment>
+}) => <>
     <div className="input-group-search">
         <svg className="icons icon--small icon--gray">
             <use xlinkHref="#magnifier" />
@@ -38,7 +38,7 @@ const renderFilterField = ({
     {!disabled
     && touched
     && (error && <span className="form__message form__message--error">{error}</span>)}
-</Fragment>;
+</>;
 
 renderFilterField.propTypes = {
     input: PropTypes.object.isRequired,
@@ -64,7 +64,7 @@ const Form = (props) => {
     } = props;
 
     return (
-        <form className="mw-100 d-flex flex-wrap"
+        <form className="d-flex flex-wrap form-control--container"
               onSubmit={(e) => {
                   e.preventDefault();
               }}>

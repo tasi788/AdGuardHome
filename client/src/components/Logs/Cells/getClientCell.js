@@ -50,12 +50,14 @@ const getClientCell = ({
             'logs__action--detailed': isDetailed,
         });
 
+        const onClick = () => toggleBlocking(buttonType, domain);
+
         return (
             <div className={buttonClass}>
                 <button
                     type="button"
                     className={`btn btn-sm ${buttonClass}`}
-                    onClick={() => toggleBlocking(buttonType, domain)}
+                    onClick={onClick}
                     disabled={processingRules}
                 >
                     {t(buttonType)}

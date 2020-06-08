@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import endsWith from 'lodash/endsWith';
 import escapeRegExp from 'lodash/escapeRegExp';
 import {
+    isSmallScreen,
     BLOCK_ACTIONS,
     DEFAULT_SHORT_DATE_FORMAT_OPTIONS,
     LONG_TIME_FORMAT,
@@ -255,84 +256,88 @@ const Table = (props) => {
             getTrProps={(state, rowInfo) => ({
                 className: props.isDetailed ? 'row--detailed' : '',
                 onClick: () => {
-                    const { dnssec_enabled, autoClients } = props;
-                    const {
-                        answer_dnssec,
-                        client,
-                        domain,
-                        elapsedMs,
-                        info,
-                        reason,
-                        response,
-                        time,
-                        tracker,
-                        upstream,
-                    } = rowInfo.original;
+                    if (isSmallScreen) {
+                        const { dnssec_enabled, autoClients } = props;
+                        const {
+                            answer_dnssec,
+                            client,
+                            domain,
+                            elapsedMs,
+                            info,
+                            reason,
+                            response,
+                            time,
+                            tracker,
+                            upstream,
+                        } = rowInfo.original;
 
-                    const hasTracker = !!tracker;
+                        const hasTracker = !!tracker;
 
-                    const autoClient = autoClients.find((autoClient) => autoClient.name === client);
+                        const autoClient = autoClients.find(
+                            (autoClient) => autoClient.name === client,
+                        );
 
-                    const country = autoClient && autoClient.whois_info
-                        && autoClient.whois_info.country;
+                        const country = autoClient && autoClient.whois_info
+                            && autoClient.whois_info.country;
 
-                    const network = autoClient && autoClient.whois_info
-                        && autoClient.whois_info.orgname;
-                    const formattedElapsedMs = formatElapsedMs(elapsedMs, t);
-                    const isFiltered = checkFiltered(reason);
+                        const network = autoClient && autoClient.whois_info
+                            && autoClient.whois_info.orgname;
+                        const formattedElapsedMs = formatElapsedMs(elapsedMs, t);
+                        const isFiltered = checkFiltered(reason);
 
-                    const buttonType = isFiltered ? BLOCK_ACTIONS.UNBLOCK : BLOCK_ACTIONS.BLOCK;
-                    const onToggleBlock = () => {
-                        toggleBlocking(buttonType, domain);
-                    };
+                        const buttonType = isFiltered ? BLOCK_ACTIONS.UNBLOCK : BLOCK_ACTIONS.BLOCK;
+                        const onToggleBlock = () => {
+                            toggleBlocking(buttonType, domain);
+                        };
 
-                    const source = tracker && tracker.sourceData && tracker.sourceData.name;
+                        const source = tracker && tracker.sourceData && tracker.sourceData.name;
 
-                    const status = t(REQ_STATUS_TO_LABEL_MAP[reason] || reason);
-                    const statusBlocked = <div className="bg--danger">{status}</div>;
+                        const status = t(REQ_STATUS_TO_LABEL_MAP[reason] || reason);
+                        const statusBlocked = <div className="bg--danger">{status}</div>;
 
-                    const detailedData = {
-                        time_table_header: formatTime(time, LONG_TIME_FORMAT),
-                        data: formatDateTime(time, DEFAULT_SHORT_DATE_FORMAT_OPTIONS),
-                        encryption_status: status,
-                        domain,
-                        details: 'title',
-                        install_settings_dns: upstream,
-                        elapsed: formattedElapsedMs,
-                        request_table_header: response && response.join('\n'),
-                        client_details: 'title',
-                        name: info && info.name,
-                        ip_address: client,
-                        country,
-                        network,
-                        validated_with_dnssec: dnssec_enabled ? Boolean(answer_dnssec) : false,
-                        [buttonType]: <div onClick={onToggleBlock}
-                                           className="title--border bg--danger">{t(buttonType)}</div>,
-                    };
+                        const detailedData = {
+                            time_table_header: formatTime(time, LONG_TIME_FORMAT),
+                            data: formatDateTime(time, DEFAULT_SHORT_DATE_FORMAT_OPTIONS),
+                            encryption_status: status,
+                            domain,
+                            details: 'title',
+                            install_settings_dns: upstream,
+                            elapsed: formattedElapsedMs,
+                            request_table_header: response && response.join('\n'),
+                            client_details: 'title',
+                            name: info && info.name,
+                            ip_address: client,
+                            country,
+                            network,
+                            validated_with_dnssec: dnssec_enabled ? Boolean(answer_dnssec) : false,
+                            [buttonType]: <div onClick={onToggleBlock}
+                                               className="title--border bg--danger">{t(buttonType)}</div>,
+                        };
 
-                    const detailedDataBlocked = {
-                        time_table_header: formatTime(time, LONG_TIME_FORMAT),
-                        data: formatDateTime(time, DEFAULT_SHORT_DATE_FORMAT_OPTIONS),
-                        encryption_status: statusBlocked,
-                        domain,
-                        known_tracker: 'title',
-                        table_name: hasTracker && tracker.name,
-                        category_label: hasTracker && tracker.category,
-                        source_label: source
-                            && <a href={`//${source}`} className="link--green">{source}</a>,
-                        details: 'title',
-                        install_settings_dns: upstream,
-                        elapsed: formattedElapsedMs,
-                        request_table_header: response && response.join('\n'),
-                        [buttonType]: <div onClick={onToggleBlock}
-                                           className="title--border">{t(buttonType)}</div>,
-                    };
+                        const detailedDataBlocked = {
+                            time_table_header: formatTime(time, LONG_TIME_FORMAT),
+                            data: formatDateTime(time, DEFAULT_SHORT_DATE_FORMAT_OPTIONS),
+                            encryption_status: statusBlocked,
+                            domain,
+                            known_tracker: 'title',
+                            table_name: hasTracker && tracker.name,
+                            category_label: hasTracker && tracker.category,
+                            source_label: source
+                                && <a href={`//${source}`} className="link--green">{source}</a>,
+                            details: 'title',
+                            install_settings_dns: upstream,
+                            elapsed: formattedElapsedMs,
+                            request_table_header: response && response.join('\n'),
+                            [buttonType]: <div onClick={onToggleBlock}
+                                               className="title--border">{t(buttonType)}</div>,
+                        };
 
-                    const detailedDataCurrent = isFiltered ? detailedDataBlocked : detailedData;
+                        const detailedDataCurrent = isFiltered ? detailedDataBlocked : detailedData;
 
-                    setDetailedDataCurrent(detailedDataCurrent);
-                    setButtonType(buttonType);
-                    setModalOpened(true);
+                        setDetailedDataCurrent(detailedDataCurrent);
+                        setButtonType(buttonType);
+                        setModalOpened(true);
+                    }
                 },
             })}
         />

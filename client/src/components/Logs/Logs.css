@@ -49,12 +49,6 @@
     font-weight: bold;
 }
 
-@media (max-width: 767px) {
-    .rt-tr .logs__row .logs__text {
-        max-width: calc(100% - 1.5rem);
-    }
-}
-
 .logs__text--full {
     width: 100%;
 }
@@ -244,13 +238,6 @@
     min-height: 50rem;
 }
 
-
-@media (max-width: 575px) {
-    .logs__table {
-        min-height: 42rem;
-    }
-}
-
 .logs__table .rt-thead.-header {
     box-shadow: none;
     font-weight: bold;
@@ -279,16 +266,6 @@
 .logs__table .rt-tr {
     position: relative;
     padding: 0 24px;
-}
-
-@media (max-width: 575px) {
-    .logs__table .rt-tr {
-        height: 3.125rem;
-    }
-
-    .logs__table .rt-tbody .rt-td {
-        padding: 0.625rem 1rem 0.875rem 0;
-    }
 }
 
 .logs__table .rt-tr {
@@ -469,12 +446,6 @@
     max-height: 100% !important;
 }
 
-@media (max-width: 469px) {
-    .field__select {
-        margin-top: 1.5rem;
-    }
-}
-
 .cursor--pointer {
     cursor: pointer;
 }
@@ -490,4 +461,91 @@
 
 .bg--danger {
     color: var(--danger);
+}
+
+.ml-small {
+    margin-left: 3.3125rem;
+}
+
+.form-control--search {
+    width: 39.125rem;
+    box-shadow: 0 1px 0 #ddd;
+    padding: 0 2.5rem;
+    height: 2.25rem;
+}
+
+.form-control--transparent {
+    border: 0 solid transparent !important;
+    background-color: transparent !important;
+}
+
+.input-group-search {
+    background-color: transparent;
+    position: relative;
+    left: 2rem;
+    top: 0.4rem;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.form-control--container {
+    max-width: 100%;
+}
+
+@media (max-width: 1279.98px) {
+    .form-control--search {
+        max-width: 30.125rem;
+    }
+
+    .form-control--container {
+        max-width: 70%;
+    }
+
+    .form-control--search {
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .form-control--search {
+        max-width: 40%;
+    }
+
+    .form-control--container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .rt-tr .logs__row .logs__text {
+        max-width: calc(100% - 1.5rem);
+    }
+
+    .ml-small {
+        margin-left: 1.5rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .logs__table .rt-tr {
+        height: 3.125rem;
+    }
+
+    .logs__table .rt-tbody .rt-td {
+        padding: 0.625rem 1rem 0.875rem 0;
+    }
+
+    .logs__table {
+        min-height: 42rem;
+    }
+}
+
+@media (max-width: 500px) {
+    .form-control--search {
+        max-width: 85%;
+    }
+
+    .field__select {
+        margin-top: 1.5rem;
+    }
 }
