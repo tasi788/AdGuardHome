@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import endsWith from 'lodash/endsWith';
 import escapeRegExp from 'lodash/escapeRegExp';
 import {
-    isSmallScreen,
     BLOCK_ACTIONS,
     DEFAULT_SHORT_DATE_FORMAT_OPTIONS,
     LONG_TIME_FORMAT,
@@ -32,6 +31,7 @@ const Table = (props) => {
         setDetailedDataCurrent,
         setButtonType,
         setModalOpened,
+        isSmallScreen,
     } = props;
 
     useEffect(() => {
@@ -369,6 +369,7 @@ Table.propTypes = {
     setDetailedDataCurrent: PropTypes.func.isRequired,
     setButtonType: PropTypes.func.isRequired,
     setModalOpened: PropTypes.func.isRequired,
+    isSmallScreen: PropTypes.bool.isRequired,
 };
 
 export default withTranslation()(Table);

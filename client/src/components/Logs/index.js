@@ -4,8 +4,7 @@ import { Trans, withTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { nanoid } from 'nanoid';
 import {
-    isSmallScreen,
-    BLOCK_ACTIONS,
+    BLOCK_ACTIONS, smallScreenSize,
     TABLE_DEFAULT_PAGE_SIZE,
     TABLE_FIRST_PAGE,
     TRANSITION_TIMEOUT,
@@ -49,6 +48,16 @@ const processContent = (data, buttonType) => Object.entries(data)
 
 const Logs = (props) => {
     const [loading, setLoading] = useState(true);
+    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < smallScreenSize);
+
+    useEffect(() => {
+        const listener = window.matchMedia(`(max-width: ${smallScreenSize}px)`)
+            .addListener((e) => {
+                setIsSmallScreen(e.matches);
+            });
+
+        return () => MediaQueryList.removeListener(listener);
+    }, []);
 
     const [detailedDataCurrent, setDetailedDataCurrent] = useState({});
     const [buttonType, setButtonType] = useState(BLOCK_ACTIONS.BLOCK);
@@ -140,6 +149,7 @@ const Logs = (props) => {
                         setDetailedDataCurrent={setDetailedDataCurrent}
                         setButtonType={setButtonType}
                         setModalOpened={setModalOpened}
+                        isSmallScreen={isSmallScreen}
                     />
                     <Modal portalClassName='grid' isOpen={isSmallScreen && isModalOpened}
                            onRequestClose={closeModal}
