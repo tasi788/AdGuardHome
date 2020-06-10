@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactTooltip from 'react-tooltip';
-
+import classNames from 'classnames';
 import './ReactTooltip.css';
 
 class Tooltip extends React.Component {
@@ -10,13 +10,15 @@ class Tooltip extends React.Component {
             id, children, className = '', place = 'right', trigger = 'hover', overridePosition, scrollHide = true,
         } = this.props;
 
+        const tooltipClassName = classNames('custom-tooltip', className);
+
         return (
             <ReactTooltip
                 id={id}
                 aria-haspopup="true"
                 effect="solid"
                 place={place}
-                className={`custom-tooltip ${className}`}
+                className={tooltipClassName}
                 backgroundColor="#fff"
                 arrowColor="transparent"
                 textColor="#4d4d4d"

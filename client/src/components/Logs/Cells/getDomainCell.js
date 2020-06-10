@@ -2,10 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import getHintElement from './getHintElement';
-import { getProtocolName } from '../../../helpers/helpers';
-import {
-    RECORD_TO_IP_MAP,
-} from '../../../helpers/constants';
+import { SCHEME_TO_PROTOCOL_MAP } from '../../../helpers/constants';
 
 const getDomainCell = (props) => {
     const {
@@ -14,7 +11,7 @@ const getDomainCell = (props) => {
 
     const {
         value, original: {
-            tracker, type, answer_dnssec, upstream,
+            tracker, type, answer_dnssec, client_proto,
         },
     } = row;
 
@@ -62,9 +59,10 @@ const getDomainCell = (props) => {
         place: 'bottom',
     });
 
-    const ip = RECORD_TO_IP_MAP[type] || '';
+    const ip = type ? `${t('type_table_header')}: ${type}` : '';
 
-    const protocol = t(getProtocolName(upstream));
+    const protocol = t(SCHEME_TO_PROTOCOL_MAP[client_proto]) || '';
+
     const valueClass = classNames('w-100', {
         'px-2 d-flex justify-content-center flex-column': isDetailed,
     });

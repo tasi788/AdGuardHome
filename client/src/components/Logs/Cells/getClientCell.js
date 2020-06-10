@@ -16,20 +16,19 @@ const getClientCell = ({
 
     const autoClient = autoClients.find((autoClient) => autoClient.name === client);
     const country = autoClient && autoClient.whois_info && autoClient.whois_info.country;
+    const city = autoClient && autoClient.whois_info && autoClient.whois_info.city;
     const network = autoClient && autoClient.whois_info && autoClient.whois_info.orgname;
 
     const id = nanoid();
 
     const data = {
-        table_name: domain,
-        ip: client,
-        dhcp_table_hostname: upstream,
         country,
+        city,
         network,
+        source_label: upstream && <a href={`//${upstream}`} className="link--green">{upstream}</a>,
     };
 
-    const processedData = Object.entries(data)
-        .filter(([, value]) => Boolean(value));
+    const processedData = Object.entries(data);
 
     const isFiltered = checkFiltered(reason);
 

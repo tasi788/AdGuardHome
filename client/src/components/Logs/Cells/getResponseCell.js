@@ -73,10 +73,11 @@ const getResponseCell = (row, filtering, t, isDetailed) => {
         <div className="logs__row">
             {fields && getHintElement({
                 className: `icons mr-4 icon--small cursor--pointer icon--light-gray ${isDetailed ? 'my-3' : ''}`,
-                tooltipClass: 'px-5 pb-5 pt-4',
+                columnClass: 'grid--limited',
+                tooltipClass: 'px-5 pb-5 pt-4 mw-75',
+                contentItemClass: 'text-pre text-truncate key-colon o-hidden',
                 dataTip: true,
                 xlinkHref: 'question',
-                contentItemClass: 'text-pre text-truncate key-colon',
                 title: 'details',
                 content: fields,
                 place: 'bottom',

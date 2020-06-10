@@ -425,16 +425,10 @@ export const BLOCK_ACTIONS = {
     UNBLOCK: 'unblock',
 };
 
-export const RECORD_TO_IP_MAP = {
-    A: 'IPv4',
-    AAAA: 'IPv6',
-};
-
 export const SCHEME_TO_PROTOCOL_MAP = {
-    HTTPS: 'dns_over_https',
-    TCP: 'dns_over_tcp',
-    TLS: 'dns_over_tls',
-    PLAIN: 'plain',
+    doh: 'dns_over_https',
+    dot: 'dns_over_tls',
+    '': 'plain_dns',
 };
 
 export const REASON_TO_COLOR_CLASS_MAP = {

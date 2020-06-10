@@ -119,7 +119,7 @@ const Table = (props) => {
                 props.t,
                 props.isDetailed,
             ),
-            minWidth: 100,
+            minWidth: 150,
             maxHeight: 60,
             headerClassName: 'logs__text',
         },
