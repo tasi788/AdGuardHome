@@ -11,21 +11,23 @@ const getClientCell = ({
     row, t, isDetailed, toggleBlocking, autoClients, processingRules,
 }) => {
     const {
-        upstream, reason, client, domain, info: { name },
+        reason, client, domain, info: { name },
     } = row.original;
 
     const autoClient = autoClients.find((autoClient) => autoClient.name === client);
     const country = autoClient && autoClient.whois_info && autoClient.whois_info.country;
     const city = autoClient && autoClient.whois_info && autoClient.whois_info.city;
     const network = autoClient && autoClient.whois_info && autoClient.whois_info.orgname;
+    const source = autoClient && autoClient.source;
 
     const id = nanoid();
 
     const data = {
+        name,
         country,
         city,
         network,
-        source_label: upstream && <a href={`//${upstream}`} className="link--green">{upstream}</a>,
+        source_label: source,
     };
 
     const processedData = Object.entries(data);
