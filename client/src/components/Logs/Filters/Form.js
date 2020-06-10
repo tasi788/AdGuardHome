@@ -4,7 +4,7 @@ import { Field, reduxForm } from 'redux-form';
 import { withTranslation } from 'react-i18next';
 import flow from 'lodash/flow';
 
-import { RESPONSE_FILTER } from '../../../helpers/constants';
+import { FORM_NAME, RESPONSE_FILTER } from '../../../helpers/constants';
 import Tooltip from '../../ui/Tooltip';
 
 const renderFilterField = ({
@@ -105,6 +105,6 @@ Form.propTypes = {
 export default flow([
     withTranslation(),
     reduxForm({
-        form: 'logsFilterForm',
+        form: FORM_NAME.LOGS_FILTER,
     }),
 ])(Form);
