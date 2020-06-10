@@ -50,13 +50,15 @@ const Logs = (props) => {
     const [loading, setLoading] = useState(true);
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < smallScreenSize);
 
-    useEffect(() => {
-        const listener = window.matchMedia(`(max-width: ${smallScreenSize}px)`)
-            .addListener((e) => {
-                setIsSmallScreen(e.matches);
-            });
+    const mediaQuery = window.matchMedia(`(max-width: ${smallScreenSize}px)`);
+    const mediaQueryHandler = (e) => {
+        setIsSmallScreen(e.matches);
+    };
 
-        return () => MediaQueryList.removeListener(listener);
+    useEffect(() => {
+        mediaQuery.addListener(mediaQueryHandler);
+
+        return () => mediaQuery.removeListener(mediaQueryHandler);
     }, []);
 
     const [detailedDataCurrent, setDetailedDataCurrent] = useState({});

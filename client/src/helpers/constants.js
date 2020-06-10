@@ -456,4 +456,4 @@ export const IP_MATCH_LIST_STATUS = {
     CIDR: 'CIDR', // the ip is in the specified CIDR range
 };
 
-export const smallScreenSize = 576;
+export const smallScreenSize = 767;
