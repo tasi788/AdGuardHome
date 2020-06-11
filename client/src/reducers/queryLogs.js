@@ -32,8 +32,6 @@ const queryLogs = handleActions(
             isDetailed: payload,
         }),
 
-        [actions.setLogsFilterRequest]: (state) => ({ ...state, processingGetLogs: true }),
-        [actions.setLogsFilterFailure]: (state) => ({ ...state, processingGetLogs: false }),
         [actions.setLogsFilterSuccess]: (state, { payload }) => {
             const { logs, oldest, filter } = payload;
             const pageSize = TABLE_DEFAULT_PAGE_SIZE;

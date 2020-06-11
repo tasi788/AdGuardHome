@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Trans, withTranslation } from 'react-i18next';
+import { Trans } from 'react-i18next';
 import Modal from 'react-modal';
 import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
 import {
     BLOCK_ACTIONS, smallScreenSize,
     TABLE_DEFAULT_PAGE_SIZE,
@@ -14,6 +15,10 @@ import Filters from './Filters';
 import Table from './Table';
 import Disabled from './Disabled';
 import './Logs.css';
+import { getFilteringStatus } from '../../actions/filtering';
+import { getClients } from '../../actions';
+import { getDnsConfig } from '../../actions/dnsConfig';
+import { getLogsConfig } from '../../actions/queryLogs';
 
 const INITIAL_REQUEST = true;
 const INITIAL_REQUEST_DATA = ['', TABLE_FIRST_PAGE, INITIAL_REQUEST];
@@ -47,52 +52,12 @@ const processContent = (data, buttonType) => Object.entries(data)
 
 
 const Logs = (props) => {
-    const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
     const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < smallScreenSize);
-
-    const mediaQuery = window.matchMedia(`(max-width: ${smallScreenSize}px)`);
-    const mediaQueryHandler = (e) => {
-        setIsSmallScreen(e.matches);
-    };
-
-    useEffect(() => {
-        mediaQuery.addListener(mediaQueryHandler);
-
-        return () => mediaQuery.removeListener(mediaQueryHandler);
-    }, []);
-
     const [detailedDataCurrent, setDetailedDataCurrent] = useState({});
     const [buttonType, setButtonType] = useState(BLOCK_ACTIONS.BLOCK);
     const [isModalOpened, setModalOpened] = useState(false);
-
-    const closeModal = () => setModalOpened(false);
-
-    const getLogs = (older_than, page, initial) => {
-        if (props.queryLogs.enabled) {
-            props.getLogs({
-                older_than,
-                page,
-                pageSize: TABLE_DEFAULT_PAGE_SIZE,
-                initial,
-            });
-        }
-    };
-
-    useEffect(() => {
-        props.setLogsPage(TABLE_FIRST_PAGE);
-        getLogs(...INITIAL_REQUEST_DATA);
-        props.getFilteringStatus();
-        props.getLogsConfig();
-        props.getClients();
-        props.getDnsConfig();
-    }, []);
-
-    const refreshLogs = () => {
-        setLoading(true);
-        props.setLogsPage(TABLE_FIRST_PAGE);
-        getLogs(...INITIAL_REQUEST_DATA);
-        setTimeout(() => setLoading(false), TRANSITION_TIMEOUT);
-    };
+    const [isLoading, setIsLoading] = useState(true);
 
     const {
         filtering,
@@ -116,6 +81,53 @@ const Logs = (props) => {
         },
     } = props;
 
+    const mediaQuery = window.matchMedia(`(max-width: ${smallScreenSize}px)`);
+    const mediaQueryHandler = (e) => {
+        setIsSmallScreen(e.matches);
+    };
+
+    useEffect(() => {
+        mediaQuery.addListener(mediaQueryHandler);
+
+        return () => mediaQuery.removeListener(mediaQueryHandler);
+    }, []);
+
+    const closeModal = () => setModalOpened(false);
+    const getLogs = (older_than, page, initial) => {
+        if (props.queryLogs.enabled) {
+            props.getLogs({
+                older_than,
+                page,
+                pageSize: TABLE_DEFAULT_PAGE_SIZE,
+                initial,
+            });
+        }
+    };
+
+    useEffect(() => {
+        (async () => {
+            dispatch(setLogsPage(TABLE_FIRST_PAGE));
+            dispatch(getFilteringStatus());
+            dispatch(getClients());
+            try {
+                await Promise.all([getLogs(...INITIAL_REQUEST_DATA),
+                    dispatch(getLogsConfig()),
+                    dispatch(getDnsConfig()),
+                ]);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setIsLoading(false);
+            }
+        })();
+    }, []);
+    const refreshLogs = () => {
+        setIsLoading(true);
+        dispatch(setLogsPage(TABLE_FIRST_PAGE));
+        getLogs(...INITIAL_REQUEST_DATA);
+        setTimeout(() => setIsLoading(false), TRANSITION_TIMEOUT);
+    };
+
     return (
         <>
             {enabled && processingGetConfig && <Loading />}
@@ -129,8 +141,8 @@ const Logs = (props) => {
                         refreshLogs={refreshLogs}
                     />
                     <Table
-                        loading={loading}
-                        setLoading={setLoading}
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
                         logs={logs}
                         pages={pages}
                         page={page}
@@ -192,15 +204,11 @@ Logs.propTypes = {
     filtering: PropTypes.object.isRequired,
     setRules: PropTypes.func.isRequired,
     addSuccessToast: PropTypes.func.isRequired,
-    getClients: PropTypes.func.isRequired,
-    getDnsConfig: PropTypes.func.isRequired,
-    getLogsConfig: PropTypes.func.isRequired,
     setLogsPagination: PropTypes.func.isRequired,
     setLogsFilter: PropTypes.func.isRequired,
     setLogsPage: PropTypes.func.isRequired,
     toggleDetailedLogs: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired,
     dnsConfig: PropTypes.object.isRequired,
 };
 
-export default withTranslation()(Logs);
+export default Logs;

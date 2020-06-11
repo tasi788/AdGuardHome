@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { withTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import ReactTable from 'react-table';
 import classNames from 'classnames';
 import endsWith from 'lodash/endsWith';
@@ -32,21 +32,30 @@ const Table = (props) => {
         setButtonType,
         setModalOpened,
         isSmallScreen,
+        setIsLoading,
+        filtering,
+        isDetailed,
+        toggleDetailedLogs,
+        setLogsPage,
+        setLogsPagination,
+        processingGetLogs,
+        logs,
+        pages,
+        page,
+        isLoading,
     } = props;
 
-    useEffect(() => {
-        props.setLoading(false);
-    }, []);
+    const [t] = useTranslation();
 
     useEffect(() => {
-        setTimeout(() => props.setLoading(false), TRANSITION_TIMEOUT);
-    }, [props.page]);
+        setTimeout(() => setIsLoading(false), TRANSITION_TIMEOUT);
+    }, [page]);
 
     const toggleBlocking = (type, domain) => {
         const {
-            t, setRules, getFilteringStatus, addSuccessToast,
+            setRules, getFilteringStatus, addSuccessToast,
         } = props;
-        const { userRules } = props.filtering;
+        const { userRules } = filtering;
 
         const lineEnding = !endsWith(userRules, '\n') ? '\n' : '';
         const baseRule = `||${domain}^$important`;
@@ -79,19 +88,18 @@ const Table = (props) => {
 
     const columns = [
         {
-            Header: props.t('time_table_header'),
+            Header: t('time_table_header'),
             accessor: 'time',
-            Cell: (row) => getDateCell(row, props.isDetailed),
+            Cell: (row) => getDateCell(row, isDetailed),
             minWidth: 62,
             maxHeight: 60,
             headerClassName: 'logs__text',
         },
         {
-            Header: props.t('request_table_header'),
+            Header: t('request_table_header'),
             accessor: 'domain',
             Cell: (row) => {
                 const {
-                    t,
                     isDetailed,
                     autoClients,
                     dnssec_enabled,
@@ -111,13 +119,13 @@ const Table = (props) => {
             headerClassName: 'logs__text',
         },
         {
-            Header: props.t('response_table_header'),
+            Header: t('response_table_header'),
             accessor: 'response',
             Cell: (row) => getResponseCell(
                 row,
-                props.filtering,
-                props.t,
-                props.isDetailed,
+                filtering,
+                t,
+                isDetailed,
             ),
             minWidth: 150,
             maxHeight: 60,
@@ -126,24 +134,24 @@ const Table = (props) => {
         {
             Header: () => {
                 const plainSelected = classNames('cursor--pointer', {
-                    'icon--selected': !props.isDetailed,
+                    'icon--selected': !isDetailed,
                 });
 
                 const detailedSelected = classNames('cursor--pointer', {
-                    'icon--selected': props.isDetailed,
+                    'icon--selected': isDetailed,
                 });
 
                 return <div className="d-flex justify-content-between">
-                    {props.t('client_table_header')}
+                    {t('client_table_header')}
                     {<span>
                         <svg
                             className={`icons icon--small icon--active mr-2 cursor--pointer ${plainSelected}`}
-                            onClick={() => props.toggleDetailedLogs(false)}>
+                            onClick={() => toggleDetailedLogs(false)}>
                             <use xlinkHref='#list' />
                         </svg>
                     <svg
                         className={`icons icon--small icon--active cursor--pointer ${detailedSelected}`}
-                        onClick={() => props.toggleDetailedLogs(true)}>
+                        onClick={() => toggleDetailedLogs(true)}>
                         <use xlinkHref='#detailed_list' />
                     </svg>
                     </span>}
@@ -152,7 +160,6 @@ const Table = (props) => {
             accessor: 'client',
             Cell: (row) => {
                 const {
-                    t,
                     isDetailed,
                     autoClients,
                     filtering: { processingRules },
@@ -184,27 +191,16 @@ const Table = (props) => {
     };
 
     const changePage = (page) => {
-        props.setLoading(true);
-        props.setLogsPage(page);
-        props.setLogsPagination({
+        setIsLoading(true);
+        setLogsPage(page);
+        setLogsPagination({
             page,
             pageSize: TABLE_DEFAULT_PAGE_SIZE,
         });
     };
 
-    const {
-        t,
-        processingGetLogs,
-        processingGetConfig,
-        logs,
-        pages,
-        page,
-    } = props;
-
-    const isLoading = processingGetLogs || processingGetConfig || props.loading;
-
     const tableClass = classNames('logs__table', {
-        'logs__table--detailed': props.isDetailed,
+        'logs__table--detailed': isDetailed,
     });
 
     return (
@@ -227,7 +223,7 @@ const Table = (props) => {
             defaultPageSize={TABLE_DEFAULT_PAGE_SIZE}
             loadingText={t('loading_table_status')}
             rowsText={t('rows_table_footer_text')}
-            noDataText={!isLoading
+            noDataText={!processingGetLogs
             && <label className="logs__text logs__text--bold">{t('empty_log')}</label>}
             pageText=''
             ofText=''
@@ -254,7 +250,7 @@ const Table = (props) => {
                 return { className: colorClass };
             }}
             getTrProps={(state, rowInfo) => ({
-                className: props.isDetailed ? 'row--detailed' : '',
+                className: isDetailed ? 'row--detailed' : '',
                 onClick: () => {
                     if (isSmallScreen) {
                         const { dnssec_enabled, autoClients } = props;
@@ -359,12 +355,11 @@ Table.propTypes = {
     setLogsPagination: PropTypes.func.isRequired,
     getLogs: PropTypes.func.isRequired,
     toggleDetailedLogs: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired,
     setRules: PropTypes.func.isRequired,
     addSuccessToast: PropTypes.func.isRequired,
     getFilteringStatus: PropTypes.func.isRequired,
-    loading: PropTypes.bool.isRequired,
-    setLoading: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    setIsLoading: PropTypes.func.isRequired,
     dnssec_enabled: PropTypes.bool.isRequired,
     setDetailedDataCurrent: PropTypes.func.isRequired,
     setButtonType: PropTypes.func.isRequired,
@@ -372,4 +367,4 @@ Table.propTypes = {
     isSmallScreen: PropTypes.bool.isRequired,
 };
 
-export default withTranslation()(Table);
+export default Table;

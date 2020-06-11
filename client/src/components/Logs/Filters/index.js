@@ -1,29 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import debounce from 'lodash/debounce';
 import { Trans } from 'react-i18next';
-
-import { DEBOUNCE_FILTER_TIMEOUT } from '../../../helpers/constants';
 import Form from './Form';
 
-class Filters extends Component {
-    getFilters = ({
-        search = '',
-        response_status,
-    }) => ({
-        search,
-        response_status,
-    });
-
-    handleFormChange = debounce(async (values) => {
-        const filter = this.getFilters(values);
-        await this.props.setLogsFilter(filter);
-    }, DEBOUNCE_FILTER_TIMEOUT);
-
-    render() {
-        const { filter, refreshLogs } = this.props;
-
-        const getRefreshButton = () => (
+const Filters = ({ filter, refreshLogs }) => (
+    <div className="page-header page-header--logs">
+        <h1 className="page-title page-title--large">
+            <Trans>query_log</Trans>
             <button
                 type="button"
                 className="btn btn-icon--green ml-3 bg-transparent"
@@ -33,27 +16,17 @@ class Filters extends Component {
                     <use xlinkHref="#update" />
                 </svg>
             </button>
-        );
 
-        return (
-            <div className="page-header page-header--logs">
-                <h1 className="page-title page-title--large">
-                    <Trans>query_log</Trans>
-                    {getRefreshButton()}
-                </h1>
-                <Form
-                    responseStatusClass="d-sm-block"
-                    initialValues={filter}
-                    onChange={this.handleFormChange}
-                />
-            </div>
-        );
-    }
-}
+        </h1>
+        <Form
+            responseStatusClass="d-sm-block"
+            initialValues={filter}
+        />
+    </div>
+);
 
 Filters.propTypes = {
     filter: PropTypes.object.isRequired,
-    setLogsFilter: PropTypes.func.isRequired,
     refreshLogs: PropTypes.func.isRequired,
     processingGetLogs: PropTypes.bool.isRequired,
 };

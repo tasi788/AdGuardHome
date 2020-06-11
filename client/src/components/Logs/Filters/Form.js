@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 import { withTranslation } from 'react-i18next';
 import flow from 'lodash/flow';
-
-import { FORM_NAME, RESPONSE_FILTER } from '../../../helpers/constants';
+import debounce from 'lodash/debounce';
+import { useDispatch } from 'react-redux';
+import { DEBOUNCE_FILTER_TIMEOUT, FORM_NAME, RESPONSE_FILTER } from '../../../helpers/constants';
 import Tooltip from '../../ui/Tooltip';
+import { setLogsFilter } from '../../../actions/queryLogs';
 
 const renderFilterField = ({
     input,
@@ -58,10 +60,18 @@ renderFilterField.propTypes = {
 const Form = (props) => {
     const {
         t,
-        handleChange,
         className = '',
         responseStatusClass,
     } = props;
+
+    const dispatch = useDispatch();
+
+    const onChange = debounce(async ({ search = '', response_status }) => {
+        await dispatch(setLogsFilter({
+            search,
+            response_status,
+        }));
+    }, DEBOUNCE_FILTER_TIMEOUT);
 
     return (
         <form className="d-flex flex-wrap form-control--container"
@@ -76,7 +86,7 @@ const Form = (props) => {
                 className={`form-control--search form-control--transparent ${className}`}
                 placeholder={t('domain_or_client')}
                 tooltip={t('query_log_strict_search')}
-                onChange={handleChange}
+                onChange={onChange}
             />
             <div className="field__select">
                 <Field
