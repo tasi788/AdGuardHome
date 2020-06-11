@@ -13,18 +13,14 @@ const CustomTooltip = ({
             <Trans>{item || '—'}</Trans>
         </div>,
     ),
-}) => {
-    const columnClassName = classNames('grid', columnClass);
-
-    return <Tooltip id={id} className={className} place={place} trigger={trigger}
+}) => <Tooltip id={id} className={className} place={place} trigger={trigger}
                     overridePosition={overridePosition}
                     scrollHide={scrollHide}
     >
         {title
         && <div className="pb-4 h-25 grid-content font-weight-bold"><Trans>{title}</Trans></div>}
-        <div className={columnClassName}>{renderContent}</div>
+        <div className={classNames(columnClass)}>{renderContent}</div>
     </Tooltip>;
-};
 
 CustomTooltip.propTypes = {
     id: PropTypes.string.isRequired,

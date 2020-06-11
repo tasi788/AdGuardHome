@@ -73,6 +73,7 @@ const getClientCell = ({
         <div className="logs__row o-hidden h-100">
             {processedData && getHintElement({
                 className: hintClass,
+                columnClass: 'grid',
                 tooltipClass: 'px-5 pb-5 pt-4',
                 dataTip: true,
                 xlinkHref: 'question',

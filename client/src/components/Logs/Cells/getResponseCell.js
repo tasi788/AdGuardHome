@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { formatElapsedMs } from '../../../helpers/helpers';
 import {
     CUSTOM_FILTERING_RULES_ID,
@@ -81,8 +82,8 @@ const getResponseCell = (row, filtering, t, isDetailed) => {
     return (
         <div className="logs__row">
             {fields && getHintElement({
-                className: `icons mr-4 icon--small cursor--pointer icon--light-gray ${isDetailed ? 'my-3' : ''}`,
-                columnClass: 'grid--limited',
+                className: classNames('icons mr-4 icon--small cursor--pointer icon--light-gray', { 'my-3': isDetailed }),
+                columnClass: 'grid grid--limited',
                 tooltipClass: 'px-5 pb-5 pt-4 mw-75',
                 contentItemClass: 'text-pre text-truncate key-colon o-hidden',
                 dataTip: true,

@@ -1,30 +1,9 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import { Trans } from 'react-i18next';
+import { nanoid } from 'nanoid';
 import getHintElement from './getHintElement';
 import { SCHEME_TO_PROTOCOL_MAP } from '../../../helpers/constants';
-
-const processContent = (data) => Object.entries(data)
-    .map(([key, value]) => {
-        const isTitle = value === 'title';
-
-        let keyClass = '';
-
-        if (isTitle) {
-            keyClass = 'grid--title';
-        }
-
-        return <Fragment key={key}>
-            <div className={keyClass || 'key-colon'}>
-                <Trans>{key}</Trans>
-            </div>
-            <div className={'text-pre text-truncate'}>
-                <Trans>{isTitle ? '' : value || '—'}</Trans>
-            </div>
-        </Fragment>;
-    });
-
 
 const getDomainCell = (props) => {
     const {
@@ -66,21 +45,31 @@ const getDomainCell = (props) => {
     const protocol = t(SCHEME_TO_PROTOCOL_MAP[client_proto]) || '';
     const ip = type ? `${t('type_table_header')}: ${type}` : '';
 
-    const requestDetails = {
-        request_details: 'title',
+    const requestDetailsObj = {
         domain,
         type_table_header: type,
         protocol,
     };
 
-    const knownTrackerData = {
-        known_tracker: 'title',
+    const knownTrackerDataObj = {
         name_table_header: tracker && tracker.name,
         category_label: tracker && tracker.category,
         source_label: source && <a href={`//${source}`} className="link--green">{source}</a>,
     };
 
-    const trackerData = hasTracker ? { ...requestDetails, ...knownTrackerData } : requestDetails;
+    const renderGrid = (content) => <div key={nanoid()}
+                                         className='text-pre text-truncate key-colon o-hidden'>{typeof content === 'string' ? t(content) : content}</div>;
+
+    const getGrid = (contentObj, title, className) => [
+        <div key={title}
+             className={classNames('pb-2 grid--title', className)}>{t(title)}</div>,
+        <div key={nanoid()}
+             className="grid">{React.Children.map(Object.entries(contentObj), renderGrid)}</div>,
+    ];
+
+    const requestDetails = getGrid(requestDetailsObj, 'request_details');
+
+    const renderContent = hasTracker ? requestDetails.concat(getGrid(knownTrackerDataObj, 'known_tracker', 'pt-4')) : requestDetails;
 
     const trackerHint = getHintElement({
         className: privacyIconClass,
@@ -88,7 +77,7 @@ const getDomainCell = (props) => {
         dataTip: true,
         xlinkHref: 'privacy',
         contentItemClass: 'key-colon',
-        renderContent: processContent(trackerData),
+        renderContent,
         place: 'bottom',
     });
 

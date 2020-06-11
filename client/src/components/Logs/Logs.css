@@ -333,12 +333,6 @@
     overflow: visible;
 }
 
-@media (min-width: 768px) {
-    .text-pre {
-        white-space: pre !important;
-    }
-}
-
 .custom-pagination {
     width: 11.875rem !important;
     background-color: transparent;
