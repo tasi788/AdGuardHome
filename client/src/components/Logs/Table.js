@@ -9,7 +9,7 @@ import {
     BLOCK_ACTIONS,
     DEFAULT_SHORT_DATE_FORMAT_OPTIONS,
     LONG_TIME_FORMAT,
-    REASON_TO_COLOR_CLASS_MAP,
+    FILTERED_STATUS_TO_META_MAP,
     TABLE_DEFAULT_PAGE_SIZE,
     TRANSITION_TIMEOUT,
 } from '../../helpers/constants';
@@ -23,7 +23,7 @@ import {
     formatDateTime,
     formatElapsedMs,
     formatTime,
-    REQ_STATUS_TO_LABEL_MAP,
+
 } from '../../helpers/helpers';
 
 const Table = (props) => {
@@ -245,7 +245,7 @@ const Table = (props) => {
                 }
 
                 const { reason } = rowInfo.original;
-                const colorClass = REASON_TO_COLOR_CLASS_MAP[reason] || 'white';
+                const colorClass = FILTERED_STATUS_TO_META_MAP[reason] ? FILTERED_STATUS_TO_META_MAP[reason].color : 'white';
 
                 return { className: colorClass };
             }}
@@ -288,7 +288,8 @@ const Table = (props) => {
 
                         const source = tracker && tracker.sourceData && tracker.sourceData.name;
 
-                        const status = t(REQ_STATUS_TO_LABEL_MAP[reason] || reason);
+                        const status = t((FILTERED_STATUS_TO_META_MAP[reason]
+                            && FILTERED_STATUS_TO_META_MAP[reason].label) || reason);
                         const statusBlocked = <div className="bg--danger">{status}</div>;
 
                         const detailedData = {

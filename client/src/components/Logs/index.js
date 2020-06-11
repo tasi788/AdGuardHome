@@ -93,6 +93,7 @@ const Logs = (props) => {
     }, []);
 
     const closeModal = () => setModalOpened(false);
+
     const getLogs = (older_than, page, initial) => {
         if (props.queryLogs.enabled) {
             props.getLogs({
@@ -135,6 +136,7 @@ const Logs = (props) => {
                 <Fragment>
                     <Filters
                         filter={filter}
+                        setIsLoading={setIsLoading}
                         processingGetLogs={processingGetLogs}
                         processingAdditionalLogs={processingAdditionalLogs}
                         setLogsFilter={setLogsFilter}

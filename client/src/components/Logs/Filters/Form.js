@@ -1,13 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
-import { withTranslation } from 'react-i18next';
-import flow from 'lodash/flow';
+import { useTranslation } from 'react-i18next';
 import debounce from 'lodash/debounce';
-import { useDispatch } from 'react-redux';
 import { DEBOUNCE_FILTER_TIMEOUT, FORM_NAME, RESPONSE_FILTER } from '../../../helpers/constants';
 import Tooltip from '../../ui/Tooltip';
-import { setLogsFilter } from '../../../actions/queryLogs';
 
 const renderFilterField = ({
     input,
@@ -59,25 +56,18 @@ renderFilterField.propTypes = {
 
 const Form = (props) => {
     const {
-        t,
         className = '',
         responseStatusClass,
+        submit,
     } = props;
 
-    const dispatch = useDispatch();
+    const [t] = useTranslation();
 
-    const onChange = debounce(async ({ search = '', response_status }) => {
-        await dispatch(setLogsFilter({
-            search,
-            response_status,
-        }));
-    }, DEBOUNCE_FILTER_TIMEOUT);
+    const debouncedSubmit = debounce(submit, DEBOUNCE_FILTER_TIMEOUT);
+    const zeroDelaySubmit = () => setTimeout(submit, 0);
 
     return (
-        <form className="d-flex flex-wrap form-control--container"
-              onSubmit={(e) => {
-                  e.preventDefault();
-              }}>
+        <form className="d-flex flex-wrap form-control--container">
             <Field
                 id="search"
                 name="search"
@@ -86,13 +76,14 @@ const Form = (props) => {
                 className={`form-control--search form-control--transparent ${className}`}
                 placeholder={t('domain_or_client')}
                 tooltip={t('query_log_strict_search')}
-                onChange={onChange}
+                onChange={debouncedSubmit}
             />
             <div className="field__select">
                 <Field
                     name="response_status"
                     component="select"
                     className={`form-control custom-select custom-select--logs custom-select__arrow--left ml-small form-control--transparent ${responseStatusClass}`}
+                    onChange={zeroDelaySubmit}
                 >
                     {Object.values(RESPONSE_FILTER)
                         .map(({
@@ -109,12 +100,9 @@ Form.propTypes = {
     handleChange: PropTypes.func,
     className: PropTypes.string,
     responseStatusClass: PropTypes.string,
-    t: PropTypes.func.isRequired,
+    submit: PropTypes.func.isRequired,
 };
 
-export default flow([
-    withTranslation(),
-    reduxForm({
-        form: FORM_NAME.LOGS_FILTER,
-    }),
-])(Form);
+export default reduxForm({
+    form: FORM_NAME.LOGS_FILTER,
+})(Form);

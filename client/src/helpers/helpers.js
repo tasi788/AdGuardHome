@@ -15,18 +15,18 @@ import versionCompare from './versionCompare';
 import { getTrackerData } from './trackers/trackers';
 
 import {
-    STANDARD_DNS_PORT,
-    STANDARD_WEB_PORT,
-    STANDARD_HTTPS_PORT,
     CHECK_TIMEOUT,
-    DNS_RECORD_TYPES,
-    DEFAULT_TIME_FORMAT,
     DEFAULT_DATE_FORMAT_OPTIONS,
-    DETAILED_DATE_FORMAT_OPTIONS,
     DEFAULT_LANGUAGE,
-    FILTERED_STATUS,
+    DEFAULT_TIME_FORMAT,
+    DETAILED_DATE_FORMAT_OPTIONS,
+    DNS_RECORD_TYPES,
     FILTERED,
+    FILTERED_STATUS,
     IP_MATCH_LIST_STATUS,
+    STANDARD_DNS_PORT,
+    STANDARD_HTTPS_PORT,
+    STANDARD_WEB_PORT,
 } from './constants';
 
 /**
@@ -481,14 +481,6 @@ export const checkSafeSearch = (reason) => reason === FILTERED_STATUS.FILTERED_S
 export const checkSafeBrowsing = (reason) => reason === FILTERED_STATUS.FILTERED_SAFE_BROWSING;
 export const checkParental = (reason) => reason === FILTERED_STATUS.FILTERED_PARENTAL;
 export const checkBlockedService = (reason) => reason === FILTERED_STATUS.FILTERED_BLOCKED_SERVICE;
-
-export const REQ_STATUS_TO_LABEL_MAP = {
-    [FILTERED_STATUS.NOT_FILTERED_WHITE_LIST]: 'show_whitelisted_responses',
-    [FILTERED_STATUS.NOT_FILTERED_NOT_FOUND]: 'show_processed_responses',
-    [FILTERED_STATUS.FILTERED_BLOCKED_SERVICE]: 'show_blocked_responses',
-    [FILTERED_STATUS.FILTERED_SAFE_SEARCH]: 'safe_search',
-    [FILTERED_STATUS.FILTERED_BLACK_LIST]: 'blocklist',
-};
 
 export const getCurrentFilter = (url, filters) => {
     const filter = filters && filters.find((item) => url === item.url);

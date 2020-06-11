@@ -1,8 +1,9 @@
 import React from 'react';
-import { REQ_STATUS_TO_LABEL_MAP, formatElapsedMs } from '../../../helpers/helpers';
+import { formatElapsedMs } from '../../../helpers/helpers';
 import {
     CUSTOM_FILTERING_RULES_ID,
     FILTERED_STATUS,
+    FILTERED_STATUS_TO_META_MAP,
 } from '../../../helpers/constants';
 import getHintElement from './getHintElement';
 
@@ -35,7 +36,8 @@ const getResponseCell = (row, filtering, t, isDetailed) => {
     const { filters, whitelistFilters } = filtering;
     const formattedElapsedMs = formatElapsedMs(elapsedMs, t);
 
-    const statusLabel = t(REQ_STATUS_TO_LABEL_MAP[reason] || reason);
+    const statusLabel = t((FILTERED_STATUS_TO_META_MAP[reason]
+        && FILTERED_STATUS_TO_META_MAP[reason].label) || reason);
     const boldStatusLabel = <span className="font-weight-bold">{statusLabel}</span>;
     const filter = getFilterName(filters, whitelistFilters, filterId, t);
 
@@ -78,7 +80,7 @@ const getResponseCell = (row, filtering, t, isDetailed) => {
                 contentItemClass: 'text-pre text-truncate key-colon o-hidden',
                 dataTip: true,
                 xlinkHref: 'question',
-                title: 'details',
+                title: 'response_details',
                 content: fields,
                 place: 'bottom',
             })}

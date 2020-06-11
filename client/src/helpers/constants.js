@@ -258,18 +258,6 @@ export const ENCRYPTION_SOURCE = {
     CONTENT: 'content',
 };
 
-export const FILTERED_STATUS = {
-    FILTERED_BLACK_LIST: 'FilteredBlackList',
-    NOT_FILTERED_WHITE_LIST: 'NotFilteredWhiteList',
-    NOT_FILTERED_NOT_FOUND: 'NotFilteredNotFound',
-    FILTERED_BLOCKED_SERVICE: 'FilteredBlockedService',
-    REWRITE: 'Rewrite',
-    REWRITE_HOSTS: 'RewriteEtcHosts',
-    FILTERED_SAFE_SEARCH: 'FilteredSafeSearch',
-    FILTERED_SAFE_BROWSING: 'FilteredSafeBrowsing',
-    FILTERED_PARENTAL: 'FilteredParental',
-};
-
 export const FILTERED = 'Filtered';
 export const NOT_FILTERED = 'NotFiltered';
 
@@ -350,6 +338,18 @@ export const TABLE_FIRST_PAGE = 0;
 
 export const LEASES_TABLE_DEFAULT_PAGE_SIZE = 20;
 
+export const FILTERED_STATUS = {
+    FILTERED_BLACK_LIST: 'FilteredBlackList',
+    NOT_FILTERED_WHITE_LIST: 'NotFilteredWhiteList',
+    NOT_FILTERED_NOT_FOUND: 'NotFilteredNotFound',
+    FILTERED_BLOCKED_SERVICE: 'FilteredBlockedService',
+    REWRITE: 'Rewrite',
+    REWRITE_HOSTS: 'RewriteEtcHosts',
+    FILTERED_SAFE_SEARCH: 'FilteredSafeSearch',
+    FILTERED_SAFE_BROWSING: 'FilteredSafeBrowsing',
+    FILTERED_PARENTAL: 'FilteredParental',
+};
+
 export const RESPONSE_FILTER = {
     ALL: {
         query: 'all',
@@ -394,6 +394,45 @@ export const RESPONSE_FILTER = {
     },
 };
 
+export const FILTERED_STATUS_TO_META_MAP = {
+    [FILTERED_STATUS.NOT_FILTERED_WHITE_LIST]: {
+        label: RESPONSE_FILTER.ALLOWED.label,
+        color: 'green',
+    },
+    [FILTERED_STATUS.NOT_FILTERED_NOT_FOUND]: {
+        label: RESPONSE_FILTER.PROCESSED.label,
+        color: 'white',
+    },
+    [FILTERED_STATUS.FILTERED_BLOCKED_SERVICE]: {
+        label: RESPONSE_FILTER.BLOCKED.label,
+        color: 'red',
+    },
+    [FILTERED_STATUS.FILTERED_SAFE_SEARCH]: {
+        label: RESPONSE_FILTER.SAFE_SEARCH.label,
+        color: 'yellow',
+    },
+    [FILTERED_STATUS.FILTERED_BLACK_LIST]: {
+        label: RESPONSE_FILTER.BLOCKED.label,
+        color: 'red',
+    },
+    [FILTERED_STATUS.REWRITE]: {
+        label: RESPONSE_FILTER.REWRITTEN.label,
+        color: 'blue',
+    },
+    [FILTERED_STATUS.REWRITE_HOSTS]: {
+        label: RESPONSE_FILTER.REWRITTEN.label,
+        color: 'blue',
+    },
+    [FILTERED_STATUS.FILTERED_SAFE_BROWSING]: {
+        label: RESPONSE_FILTER.BLOCKED_THREATS.label,
+        color: 'yellow',
+    },
+    [FILTERED_STATUS.FILTERED_PARENTAL]: {
+        label: RESPONSE_FILTER.BLOCKED_ADULT_WEBSITES.label,
+        color: 'yellow',
+    },
+};
+
 export const DEFAULT_TIME_FORMAT = 'HH:mm:ss';
 
 export const LONG_TIME_FORMAT = 'HH:mm:ss.SSS';
@@ -430,14 +469,6 @@ export const SCHEME_TO_PROTOCOL_MAP = {
     doh: 'dns_over_https',
     dot: 'dns_over_tls',
     '': 'plain_dns',
-};
-
-export const REASON_TO_COLOR_CLASS_MAP = {
-    [FILTERED_STATUS.FILTERED_SAFE_SEARCH]: 'yellow',
-    [FILTERED_STATUS.FILTERED_BLACK_LIST]: 'red',
-    [FILTERED_STATUS.FILTERED_BLOCKED_SERVICE]: 'red',
-    [FILTERED_STATUS.NOT_FILTERED_WHITE_LIST]: 'green',
-    [FILTERED_STATUS.REWRITE]: 'blue',
 };
 
 export const DNS_REQUEST_OPTIONS = {
