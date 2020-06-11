@@ -30,7 +30,7 @@ const getFilterName = (filters, whitelistFilters, filterId, t) => {
 const getResponseCell = (row, filtering, t, isDetailed) => {
     const { value: responses, original } = row;
     const {
-        reason, filterId, rule, status, upstream, elapsedMs,
+        reason, filterId, rule, status, upstream, elapsedMs, domain,
     } = original;
 
     const { filters, whitelistFilters } = filtering;
@@ -43,30 +43,37 @@ const getResponseCell = (row, filtering, t, isDetailed) => {
 
     const FILTERED_STATUS_TO_FIELDS_MAP = {
         [FILTERED_STATUS.NOT_FILTERED_NOT_FOUND]: {
+            domain,
             encryption_status: boldStatusLabel,
             install_settings_dns: upstream,
             elapsed: formattedElapsedMs,
             response_table_header: responses && responses.join('\n'),
         },
         [FILTERED_STATUS.FILTERED_BLOCKED_SERVICE]: {
+            domain,
             encryption_status: boldStatusLabel,
             filter,
             rule_label: rule,
             response_table_header: status,
         },
         [FILTERED_STATUS.FILTERED_SAFE_SEARCH]: {
+            domain,
             encryption_status: boldStatusLabel,
             install_settings_dns: upstream,
             elapsed: formattedElapsedMs,
         },
         [FILTERED_STATUS.FILTERED_BLACK_LIST]: {
+            domain,
             encryption_status: boldStatusLabel,
             install_settings_dns: upstream,
             elapsed: formattedElapsedMs,
         },
     };
 
-    const fields = FILTERED_STATUS_TO_FIELDS_MAP[reason] ? Object.entries(FILTERED_STATUS_TO_FIELDS_MAP[reason]) : '';
+    const fields = FILTERED_STATUS_TO_FIELDS_MAP[reason]
+        ? Object.entries(FILTERED_STATUS_TO_FIELDS_MAP[reason])
+        : Object.entries(FILTERED_STATUS_TO_FIELDS_MAP.NOT_FILTERED_NOT_FOUND);
+
     const detailedInfo = reason === FILTERED_STATUS.FILTERED_BLOCKED_SERVICE
     || reason === FILTERED_STATUS.FILTERED_BLACK_LIST
         ? filter : formattedElapsedMs;

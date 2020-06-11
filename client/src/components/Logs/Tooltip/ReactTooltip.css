@@ -21,6 +21,14 @@
     grid-column-gap: 1.5rem;
 }
 
+.grid--title {
+    font-weight: bold;
+}
+
+.grid--title:not(:first-child) {
+    padding-top: 1rem;
+}
+
 @media (max-width: 768px) {
     .grid {
         grid-template-columns: 35% 55%;

@@ -19,10 +19,12 @@ const getClientCell = ({
     const city = autoClient && autoClient.whois_info && autoClient.whois_info.city;
     const network = autoClient && autoClient.whois_info && autoClient.whois_info.orgname;
     const source = autoClient && autoClient.source;
+    const ip = autoClient && autoClient.ip;
 
     const id = nanoid();
 
     const data = {
+        address: ip,
         name,
         country,
         city,

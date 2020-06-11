@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import { Trans } from 'react-i18next';
 import getHintElement from './getHintElement';
 import { SCHEME_TO_PROTOCOL_MAP } from '../../../helpers/constants';
+
+const processContent = (data) => Object.entries(data)
+    .map(([key, value]) => {
+        const isTitle = value === 'title';
+
+        let keyClass = '';
+
+        if (isTitle) {
+            keyClass = 'grid--title';
+        }
+
+        return <Fragment key={key}>
+            <div className={keyClass || 'key-colon'}>
+                <Trans>{key}</Trans>
+            </div>
+            <div className={'text-pre text-truncate'}>
+                <Trans>{isTitle ? '' : value || '—'}</Trans>
+            </div>
+        </Fragment>;
+    });
+
 
 const getDomainCell = (props) => {
     const {
@@ -11,7 +33,7 @@ const getDomainCell = (props) => {
 
     const {
         value, original: {
-            tracker, type, answer_dnssec, client_proto,
+            tracker, type, answer_dnssec, client_proto, domain,
         },
     } = row;
 
@@ -41,27 +63,34 @@ const getDomainCell = (props) => {
         place: 'bottom',
     });
 
-    const data = {
+    const protocol = t(SCHEME_TO_PROTOCOL_MAP[client_proto]) || '';
+    const ip = type ? `${t('type_table_header')}: ${type}` : '';
+
+    const requestDetails = {
+        request_details: 'title',
+        domain,
+        type_table_header: type,
+        protocol,
+    };
+
+    const knownTrackerData = {
+        known_tracker: 'title',
         name_table_header: tracker && tracker.name,
         category_label: tracker && tracker.category,
         source_label: source && <a href={`//${source}`} className="link--green">{source}</a>,
     };
 
+    const trackerData = hasTracker ? { ...requestDetails, ...knownTrackerData } : requestDetails;
+
     const trackerHint = getHintElement({
         className: privacyIconClass,
         tooltipClass: 'pt-4 pb-5 px-5',
-        dataTip: hasTracker,
+        dataTip: true,
         xlinkHref: 'privacy',
         contentItemClass: 'key-colon',
-        content: Object.entries(data),
-        columnClass: 'grid--gap-bg',
-        title: 'known_tracker',
+        renderContent: processContent(trackerData),
         place: 'bottom',
     });
-
-    const ip = type ? `${t('type_table_header')}: ${type}` : '';
-
-    const protocol = t(SCHEME_TO_PROTOCOL_MAP[client_proto]) || '';
 
     const valueClass = classNames('w-100', {
         'px-2 d-flex justify-content-center flex-column': isDetailed,

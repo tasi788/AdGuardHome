@@ -23,7 +23,7 @@ import { getLogsConfig } from '../../actions/queryLogs';
 const INITIAL_REQUEST = true;
 const INITIAL_REQUEST_DATA = ['', TABLE_FIRST_PAGE, INITIAL_REQUEST];
 
-const processContent = (data, buttonType) => Object.entries(data)
+export const processContent = (data, buttonType) => Object.entries(data)
     .map(([key, value]) => {
         const isTitle = value === 'title';
         const isButton = key === buttonType;
