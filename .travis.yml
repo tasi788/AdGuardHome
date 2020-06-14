@@ -1,4 +1,4 @@
-if: repo = Lawlietr`/AdGuardHome
+if: repo = Lawlietr/AdGuardHome
 language: go
 sudo: false
 
