@@ -102,20 +102,20 @@ matrix:
         skip_cleanup: true
 
     # Docker build configuration
-#    - if: repo = AdguardTeam/AdGuardHome
-#    - name: docker
-#      if: type != pull_request AND (branch = master OR tag IS present) AND repo = AdguardTeam/AdGuardHome
-#      go:
-#        - 1.14.x
-#      os:
-#        - linux
-#      services:
-#        - docker
-#      before_script:
-#        - nvm install node
-#        - npm install -g npm
-#      script:
-#        - docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWORD"
-#        - ./build_docker.sh
-#      after_script:
-#        - docker images
+    - if: repo = AdguardTeam/AdGuardHome
+    - name: docker
+      if: type != pull_request AND (branch = master OR tag IS present) AND repo = AdguardTeam/AdGuardHome
+      go:
+        - 1.14.x
+      os:
+        - linux
+      services:
+        - docker
+      before_script:
+        - nvm install node
+        - npm install -g npm
+      script:
+        - docker login -u="$DOCKER_USER" -p="$DOCKER_PASSWORD"
+        - ./build_docker.sh
+      after_script:
+        - docker images
