@@ -1,4 +1,4 @@
-if: repo = AdguardTeam/AdGuardHome
+#if: repo = AdguardTeam/AdGuardHome
 language: go
 sudo: false
 
@@ -69,13 +69,13 @@ after_success:
         ;;
     esac
 
-notifications:
-  slack: performix:yXTihlSzsLFSZiqbXMNzvTSX
+#notifications:
+#  slack: performix:yXTihlSzsLFSZiqbXMNzvTSX
 
 matrix:
   include:
     # Release build configuration
-    - if: repo = AdguardTeam/AdGuardHome
+#    - if: repo = AdguardTeam/AdGuardHome
     - name: release
       go:
         - 1.14.x
