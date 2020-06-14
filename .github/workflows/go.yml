@@ -27,7 +27,6 @@ jobs:
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(go env GOPATH)/bin v1.23.8
             dep ensure
         fi
 
@@ -35,4 +34,6 @@ jobs:
       run: go build -v .
 
     - name: Test
-      run: /bin/bash ci.sh
+      run: ｜
+        curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh| sh -s -- -b $(go env GOPATH)/bin v1.23.8
+        /bin/bash ci.sh
