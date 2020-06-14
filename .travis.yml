@@ -1,4 +1,4 @@
-if: repo = Lawlietr/AdGuardHome
+if: repo = AdguardTeam/AdGuardHome
 language: go
 sudo: false
 
@@ -75,7 +75,7 @@ notifications:
 matrix:
   include:
     # Release build configuration
-    - if: repo = Lawlietr/AdGuardHome
+    - if: repo = AdguardTeam/AdGuardHome
     - name: release
       go:
         - 1.14.x
@@ -102,9 +102,9 @@ matrix:
         skip_cleanup: true
 
     # Docker build configuration
-    - if: repo = Lawlietr/AdGuardHome
+    - if: repo = AdguardTeam/AdGuardHome
     - name: docker
-      if: type != pull_request AND (branch = master OR tag IS present) AND repo = Lawlietr/AdGuardHome
+      if: type != pull_request AND (branch = master OR tag IS present) AND repo = AdguardTeam/AdGuardHome
       go:
         - 1.14.x
       os:
